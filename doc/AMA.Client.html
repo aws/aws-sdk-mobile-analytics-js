@@ -1,0 +1,3031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: Client</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Class: Client</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+    Client
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <h4 class="name" id="Client"><span class="type-signature"></span>new Client<span class="signature">(options)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Client.html#Options">AMA.Client.Options</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A configuration map for the AMA.Client</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MobileAnalyticsClient.js.html">MobileAnalyticsClient.js</a>, <a href="MobileAnalyticsClient.js.html#line13">line 13</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A new instance of the Mobile Analytics Mid Level Client
+</div>
+
+
+
+        
+    
+    
+</dd>
+
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="createEvent"><span class="type-signature"></span>createEvent<span class="signature">(eventType, session, <span class="optional">attributes=</span>, <span class="optional">metrics=</span>)</span><span class="type-signature"> &rarr; {AMA.Event}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        AMA.Client.createEvent
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>eventType</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Custom Event Type to be displayed in Console</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>session</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Session.html">AMA.Session</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Session Object (required for use within console)
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Identifier for current session</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>startTimestamp</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Timestamp that indicates the start of the session</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>attributes=</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Custom attributes</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>metrics=</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Custom metrics</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MobileAnalyticsClient.js.html">MobileAnalyticsClient.js</a>, <a href="MobileAnalyticsClient.js.html#line239">line 239</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">AMA.Event</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="pushEvent"><span class="type-signature"></span>pushEvent<span class="signature">(event)</span><span class="type-signature"> &rarr; {int}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        AMA.Client.pushEvent
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">AMA.Event</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">event to be pushed onto queue</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MobileAnalyticsClient.js.html">MobileAnalyticsClient.js</a>, <a href="MobileAnalyticsClient.js.html#line284">line 284</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Index of event in outputs.events
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">int</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="recordEvent"><span class="type-signature"></span>recordEvent<span class="signature">(eventType, session, <span class="optional">attributes=</span>, <span class="optional">metrics=</span>)</span><span class="type-signature"> &rarr; {AMA.Event}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Helper to record events, will automatically submit if the events exceed batchSizeLimit
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>eventType</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Custom event type name</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>session</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Session.html">AMA.Session</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Session object</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>attributes=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Client.html#Attributes">AMA.Client.Attributes</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Custom attributes</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>metrics=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Client.html#Metrics">AMA.Client.Metrics</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Custom metrics</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MobileAnalyticsClient.js.html">MobileAnalyticsClient.js</a>, <a href="MobileAnalyticsClient.js.html#line304">line 304</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The event that was recorded
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">AMA.Event</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="recordMonetizationEvent"><span class="type-signature"></span>recordMonetizationEvent<span class="signature">(session, monetizationDetails, <span class="optional">attributes=</span>, <span class="optional">metrics=</span>)</span><span class="type-signature"> &rarr; {event}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        recordMonetizationEvent
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>session</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>monetizationDetails</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Details about Monetization Event
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>currency</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">ISO Currency of event</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>productId</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Product Id of monetization event</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>quantity</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Quantity of product in transaction</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>price</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Price of product either ISO formatted string, or number
+                                                   with associated ISO Currency</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>attributes=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Client.html#Attributes">AMA.Client.Attributes</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Custom attributes</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>metrics=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Client.html#Metrics">AMA.Client.Metrics</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Custom metrics</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MobileAnalyticsClient.js.html">MobileAnalyticsClient.js</a>, <a href="MobileAnalyticsClient.js.html#line334">line 334</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The event that was recorded
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">event</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="submitEvents"><span class="type-signature"></span>submitEvents<span class="signature">(<span class="optional">options=</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        submitEvents
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">options for submitting events</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options.clientContext</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    this.options.clientContext
+                
+                </td>
+            
+            
+            <td class="description last">clientContext to submit with defaults
+                                                                     to options.clientContext</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options.submitCallback</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">SubmitCallback</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    this.options.submitCallback
+                
+                </td>
+            
+            
+            <td class="description last">Callback function that is executed
+                                                                               when events are successfully
+                                                                               submitted</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MobileAnalyticsClient.js.html">MobileAnalyticsClient.js</a>, <a href="MobileAnalyticsClient.js.html#line363">line 363</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Array of batch indices that were submitted
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Array</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+        
+        <dl>
+                
+<dt>
+    <h4 class="name" id="Attributes">Attributes</h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        A collection of key-value pairs that give additional context to the event. The key-value pairs are specified by the developer.
+    </div>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">object</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MobileAnalyticsClient.js.html">MobileAnalyticsClient.js</a>, <a href="MobileAnalyticsClient.js.html#line9">line 9</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+            
+                
+<dt>
+    <h4 class="name" id="Event">Event</h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        A JSON object representing an event occurrence in your app and consists of the following:
+    </div>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">object</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>eventType</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">A name signifying an event that occurred in your app. This is used for grouping and aggregating like events together for reporting purposes.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>timestamp</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The time the event occurred in ISO 8601 standard date time format. For example, 2014-06-30T19:07:47.885Z</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>attributes=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Client.html#Attributes">AMA.Client.Attributes</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">A collection of key-value pairs that give additional context to the event. The key-value pairs are specified by the developer. This collection can be empty or the attribute object can be omitted.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>metrics=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Client.html#Metrics">AMA.Client.Metrics</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">A collection of key-value pairs that gives additional measurable context to the event. The pairs specified by the developer.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>session</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Session.html">AMA.Session</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Describes the session. Session information is required on ALL events.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MobileAnalyticsClient.js.html">MobileAnalyticsClient.js</a>, <a href="MobileAnalyticsClient.js.html#line12">line 12</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+            
+                
+<dt>
+    <h4 class="name" id="Logger">Logger</h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Uses Javascript Style log levels, one function for each level.  Basic usage is to pass the console object which will output directly to browser developer console.
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>log=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Logger for client log level messages</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>info=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Logger for interaction level messages</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>warn=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Logger for warn level messages</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>error=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Logger for error level messages</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MobileAnalyticsClient.js.html">MobileAnalyticsClient.js</a>, <a href="MobileAnalyticsClient.js.html#line8">line 8</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+            
+                
+<dt>
+    <h4 class="name" id="Metrics">Metrics</h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        A collection of key-value pairs that gives additional measurable context to the event. The pairs specified by the developer.
+    </div>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">object</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MobileAnalyticsClient.js.html">MobileAnalyticsClient.js</a>, <a href="MobileAnalyticsClient.js.html#line10">line 10</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+            
+                
+<dt>
+    <h4 class="name" id="Options">Options</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>appId</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The Application ID from the Amazon Mobile Analytics Console</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>apiVersion</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    2014-06-05
+                
+                </td>
+            
+            
+            <td class="description last">The version of the Mobile Analytics API to submit to.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>provider</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    AWS.config.credentials
+                
+                </td>
+            
+            
+            <td class="description last">Credentials to use for submitting events.
+                                                             **Never check in credentials to source control.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>autoSubmitEvents</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">Automatically Submit Events, Default: true</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>autoSubmitInterval</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    10000
+                
+                </td>
+            
+            
+            <td class="description last">Interval to try to submit events in ms, Default: 10s</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>batchSizeLimit</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    256000
+                
+                </td>
+            
+            
+            <td class="description last">Batch Size in Bytes, Default: 256Kb</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>submitCallback=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Client.html#SubmitCallback">AMA.Client.SubmitCallback</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">Callback function that is executed when events are successfully submitted</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>globalAttributes=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Client.html#Attributes">AMA.Client.Attributes</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">Interval to try to submit events in ms, Default: 60s</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>globalMetrics=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Client.html#Metrics">AMA.Client.Metrics</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">Interval to try to submit events in ms, Default: 60s</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>clientId</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    GUID()
+                
+                </td>
+            
+            
+            <td class="description last">A unique identifier representing this installation instance of your app. This will be managed and persisted by the SDK by default.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>appTitle=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The title of your app. For example, My App.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>appVersionName=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The version of your app. For example, V2.0.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>appVersionCode=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The version code for your app. For example, 3.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>appPackageName=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The name of your package. For example, com.example.my_app.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>platform=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The operating system of the device. For example, iPhoneOS.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>plaformVersion=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The version of the operating system of the device. For example, 4.0.4.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>model=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The model of the device. For example, Nexus.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>make=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The manufacturer of the device. For example, Samsung.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>locale=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The locale of the device. For example, en_US.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>logger=</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AMA.Client.html#Logger">AMA.Client.Logger</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">Object of logger functions</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MobileAnalyticsClient.js.html">MobileAnalyticsClient.js</a>, <a href="MobileAnalyticsClient.js.html#line6">line 6</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+            
+                
+<dt>
+    <h4 class="name" id="SubmitCallback"><span class="type-signature"></span>SubmitCallback<span class="signature">(err, data, batchId)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>err</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Error</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Null</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>batchId</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MobileAnalyticsClient.js.html">MobileAnalyticsClient.js</a>, <a href="MobileAnalyticsClient.js.html#line11">line 11</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+            </dl>
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-AMA.html">AMA</a></li></ul><h3>Classes</h3><ul><li><a href="AMA.Client.html">Client</a></li><li><a href="AMA.Manager.html">Manager</a></li><li><a href="AMA.Session.html">Session</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Mar 19 2015 14:39:22 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: MobileAnalyticsSessionManager.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: MobileAnalyticsSessionManager.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>var AMA = global.AMA;
+AMA.Storage = require('./StorageClients/LocalStorage.js');
+AMA.StorageKeys = require('./StorageClients/StorageKeys.js');
+AMA.Session = require('./MobileAnalyticsSession.js');
+AMA.Client = require('./MobileAnalyticsClient.js');
+
+/**
+ * @typedef AMA.Manager.Options
+ * @augments AMA.Client.Options
+ * @property {AMA.Session.ExpirationCallback} [expirationCallback=] - Callback function to call when sessions expire
+ */
+
+/**
+ * @name AMA.Manager
+ * @namespace AMA.Manager
+ * @constructor
+ * @param {AMA.Client.Options|AMA.Client} options - A configuration map for the AMA.Client or an instantiated AMA.Client
+ * @see AMA.Client
+ */
+AMA.Manager = (function () {
+    'use strict';
+    /**
+     * @lends AMA.Manager
+     */
+    var Manager = function (options) {
+        if (options instanceof AMA.Client) {
+            this.client = options;
+        } else {
+            this.client = new AMA.Client(options);
+        }
+        this.options = this.client.options;
+        this.outputs = this.client.outputs;
+
+        this.options.expirationCallback = this.options.expirationCallback || AMA.Util.NOP;
+        function checkForStoredSessions(context) {
+            AMA.Storage.each(function (key) {
+                if (key.indexOf(AMA.StorageKeys.SESSION_ID) === 0) {
+                    context.outputs.session = new AMA.Session({
+                        sessionId: AMA.Storage.get(key),
+                        sessionLength: context.options.sessionLength,
+                        expirationCallback: function (session) {
+                            var shouldExtend = context.options.expirationCallback(session);
+                            if (shouldExtend === true || typeof shouldExtend === 'number') {
+                                return shouldExtend;
+                            }
+                            context.stopSession();
+                        }
+                    });
+                    if (new Date().getTime() > context.outputs.session.expirationDate) {
+                        context.outputs.session.expireSession();
+                        delete context.outputs.session;
+                    }
+                }
+            });
+        }
+
+        checkForStoredSessions(this);
+        if (!this.outputs.session) {
+            this.startSession();
+        }
+        this.client.submitEvents();
+    };
+
+    /**
+     * submitEvents
+     * @param {Object} [options=] - options for submitting events
+     * @param {Object} [options.clientContext=this.options.clientContext] - clientContext to submit with defaults to
+     *                                                                      options.clientContext
+     * @returns {Array} Array of batch indices that were submitted
+     */
+    Manager.prototype.submitEvents = function (options) {
+        return this.client.submitEvents(options);
+    };
+
+    /**
+     * Function to start a session
+     * @returns {AMA.Client.Event} The start session event recorded
+     */
+    Manager.prototype.startSession = function () {
+        this.client.logger.log('[Function:(AMA.Manager).startSession]');
+        if (this.outputs.session) {
+            //Clear Session
+            this.outputs.session.clearSession();
+        }
+        this.outputs.session = new AMA.Session({
+            logger: this.client.options.logger,
+            sessionLength: this.options.sessionLength,
+            expirationCallback: function (session) {
+                var shouldExtend = this.options.expirationCallback(session);
+                if (shouldExtend === true || typeof shouldExtend === 'number') {
+                    return shouldExtend;
+                }
+                this.stopSession();
+            }.bind(this)
+        });
+        return this.recordEvent('_session.start');
+    };
+
+    /**
+     * Function to extend the current session.
+     * @param {int} [milliseconds=options.sessionLength] - Milliseconds to extend the session by, will default
+     *                                                     to another session length
+     * @returns {int} The Session expiration (in Milliseconds)
+     */
+    Manager.prototype.extendSession = function (milliseconds) {
+        return this.outputs.session.extendSession(milliseconds || this.options.sessionLength);
+    };
+
+    /**
+     * Function to stop the current session
+     * @returns {AMA.Client.Event} The stop session event recorded
+     */
+    Manager.prototype.stopSession = function () {
+        this.client.logger.log('[Function:(AMA.Manager).stopSession]');
+        this.outputs.session.stopSession();
+        this.outputs.session.expireSession(AMA.Util.NOP);
+        return this.recordEvent('_session.stop');
+    };
+
+    /**
+     * Function to stop the current session and start a new one
+     * @returns {AMA.Session} The new Session Object for the SessionManager
+     */
+    Manager.prototype.renewSession = function () {
+        this.stopSession();
+        this.startSession();
+        return this.outputs.session;
+    };
+
+    /**
+     * Function that constructs a Mobile Analytics Event
+     * @param {string} eventType - Custom Event Type to be displayed in Console
+     * @param {AMA.Client.Attributes} [attributes=] - Map of String attributes
+     * @param {AMA.Client.Metrics} [metrics=] - Map of numeric values
+     * @returns {AMA.Client.Event}
+     */
+    Manager.prototype.createEvent = function (eventType, attributes, metrics) {
+        return this.client.createEvent(eventType, this.outputs.session, attributes, metrics);
+    };
+
+    /**
+     * Function to record a custom event
+     * @param eventType - Custom event type name
+     * @param {AMA.Client.Attributes} [attributes=] - Custom attributes
+     * @param {AMA.Client.Metrics} [metrics=] - Custom metrics
+     * @returns {AMA.Client.Event} The event that was recorded
+     */
+    Manager.prototype.recordEvent = function (eventType, attributes, metrics) {
+        return this.client.recordEvent(eventType, this.outputs.session, attributes, metrics);
+    };
+
+    /**
+     * Function to record a monetization event
+     * @param {Object} monetizationDetails - Details about Monetization Event
+     * @param {string} monetizationDetails.currency - ISO Currency of event
+     * @param {string} monetizationDetails.productId - Product Id of monetization event
+     * @param {number} monetizationDetails.quantity - Quantity of product in transaction
+     * @param {string|number} monetizationDetails.price - Price of product either ISO formatted string, or number
+     *                                                    with associated ISO Currency
+     * @param {AMA.Client.Attributes} [attributes=] - Custom attributes
+     * @param {AMA.Client.Metrics} [metrics=] - Custom metrics
+     * @returns {AMA.Client.Event} The event that was recorded
+     */
+    Manager.prototype.recordMonetizationEvent = function (monetizationDetails, attributes, metrics) {
+        return this.client.recordMonetizationEvent(this.outputs.session, monetizationDetails, attributes, metrics);
+    };
+    return Manager;
+}());
+
+module.exports = AMA.Manager;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-AMA.html">AMA</a></li></ul><h3>Classes</h3><ul><li><a href="AMA.Client.html">Client</a></li><li><a href="AMA.Manager.html">Manager</a></li><li><a href="AMA.Session.html">Session</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Mar 19 2015 14:39:22 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

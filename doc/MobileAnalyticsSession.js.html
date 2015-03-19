@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: MobileAnalyticsSession.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: MobileAnalyticsSession.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>var AMA = global.AMA;
+AMA.Storage = require('./StorageClients/LocalStorage.js');
+AMA.StorageKeys = require('./StorageClients/StorageKeys.js');
+AMA.Util = require('./MobileAnalyticsUtilities.js');
+/**
+ * @name AMA.Session
+ * @namespace AMA.Session
+ * @constructor
+ * @param {Object=}     [options=] - A configuration map for the Session
+ * @param {string=}     [options.sessionId=Utilities.GUID()]- A sessionId for session.
+ * @param {string=}     [options.appId=new Date().toISOString()] - The start Timestamp (default now).
+ * @param {number=}     [options.sessionLength=600000] - Length of session in Milliseconds (default 10 minutes).
+ * @param {AMA.Session.ExpirationCallback=}   [options.expirationCallback] - Callback Function for when a session expires
+ * @param {AMA.Client.Logger=} [options.logger=] - Object containing javascript style logger functions (passing console
+ *                                                 will output to browser dev consoles)
+ */
+/**
+ * @callback AMA.Session.ExpirationCallback
+ * @param {AMA.Session} session
+ * @returns {boolean|int} - Returns either true to extend the session by the sessionLength or an int with the number of
+ *                          seconds to extend the session.  All other values will clear the session from storage.
+ */
+AMA.Session = (function () {
+    'use strict';
+    /**
+     * @lends AMA.Session
+     */
+    var Session = function (options) {
+        this.options = options || {};
+        this.options.logger = this.options.logger || {};
+        this.logger = {
+            log: this.options.logger.log || AMA.Util.NOP,
+            info: this.options.logger.info || AMA.Util.NOP,
+            warn: this.options.logger.warn || AMA.Util.NOP,
+            error: this.options.logger.error || AMA.Util.NOP
+        };
+        this.logger.log = this.logger.log.bind(this.options.logger);
+        this.logger.info = this.logger.info.bind(this.options.logger);
+        this.logger.warn = this.logger.warn.bind(this.options.logger);
+        this.logger.error = this.logger.error.bind(this.options.logger);
+        this.logger.log('[Function:(AWS.MobileAnalyticsClient)Session Constructor]' +
+            (options ? '\noptions:' + JSON.stringify(options) : ''));
+        this.options.expirationCallback = this.options.expirationCallback || AMA.Util.NOP;
+        this.id = this.options.sessionId || AMA.Util.GUID();
+        this.sessionLength = this.options.sessionLength || 600000; //Default session length is 10 minutes
+        //Suffix the AMA.Storage Keys with Session Id to ensure proper scope
+        this.StorageKeys = {
+            'SESSION_ID': AMA.StorageKeys.SESSION_ID + this.id,
+            'SESSION_EXPIRATION': AMA.StorageKeys.SESSION_EXPIRATION + this.id,
+            'SESSION_START_TIMESTAMP': AMA.StorageKeys.SESSION_START_TIMESTAMP + this.id
+        };
+        this.startTimestamp = this.options.startTime ||
+            AMA.Storage.get(this.StorageKeys.SESSION_START_TIMESTAMP) ||
+            new Date().toISOString();
+        this.expirationDate = parseInt(AMA.Storage.get(this.StorageKeys.SESSION_EXPIRATION), 10);
+        if (isNaN(this.expirationDate)) {
+            this.expirationDate = (new Date().getTime() + this.sessionLength);
+        }
+        AMA.Storage.set(this.StorageKeys.SESSION_ID, this.id);
+        AMA.Storage.set(this.StorageKeys.SESSION_EXPIRATION, this.expirationDate);
+        AMA.Storage.set(this.StorageKeys.SESSION_START_TIMESTAMP, this.startTimestamp);
+        this.sessionTimeoutReference = setTimeout(this.expireSession.bind(this), this.sessionLength);
+    };
+
+    /**
+     * Expire session and clear session
+     * @param {expirationCallback=} Callback function to call when sessions expire
+     */
+    Session.prototype.expireSession = function (expirationCallback) {
+        this.logger.log('[Function:(Session).expireSession]');
+        expirationCallback = expirationCallback || this.options.expirationCallback;
+        var shouldExtend = expirationCallback(this);
+        if (typeof shouldExtend === 'boolean' && shouldExtend) {
+            shouldExtend = this.options.sessionLength;
+        }
+        if (typeof shouldExtend === 'number') {
+            this.extendSession(shouldExtend);
+        } else {
+            this.clearSession();
+        }
+    };
+
+    /**
+     * Clear session from storage system
+     */
+    Session.prototype.clearSession = function () {
+        this.logger.log('[Function:(Session).clearSession]');
+        clearTimeout(this.sessionTimeoutReference);
+        AMA.Storage.delete(this.StorageKeys.SESSION_ID);
+        AMA.Storage.delete(this.StorageKeys.SESSION_EXPIRATION);
+        AMA.Storage.delete(this.StorageKeys.SESSION_START_TIMESTAMP);
+    };
+
+
+
+    /**
+     * Extend session by adding to the expiration timestamp
+     * @param {int} [sessionExtensionLength=sessionLength] - The number of milliseconds to add to the expiration date
+     *                                                       (session length by default).
+     */
+    Session.prototype.extendSession = function (sessionExtensionLength) {
+        this.logger.log('[Function:(Session).extendSession]' +
+                        (sessionExtensionLength ? '\nsessionExtensionLength:' + sessionExtensionLength : ''));
+        sessionExtensionLength = sessionExtensionLength || this.sessionLength;
+        this.setSessionTimeout(this.expirationDate + parseInt(sessionExtensionLength, 10));
+    };
+
+    /**
+     * @param {string} [stopDate=now] - The ISO Date String to set the stopTimestamp to (now for default).
+     */
+    Session.prototype.stopSession = function (stopDate) {
+        this.logger.log('[Function:(Session).stopSession]' +  (stopDate ? '\nstopDate:' + stopDate : ''));
+        this.stopTimestamp = stopDate || new Date().toISOString();
+    };
+
+    /**
+     * Reset session timeout to expire in a given number of seconds
+     * @param {int} [milliseconds=sessionLength] - The number of milliseconds until the session should expire (from now). 
+     */
+    Session.prototype.resetSessionTimeout = function (milliseconds) {
+        this.logger.log('[Function:(Session).resetSessionTimeout]' +
+                        (milliseconds ? '\nmilliseconds:' + milliseconds : ''));
+        milliseconds = milliseconds || this.sessionLength;
+        this.setSessionTimeout(new Date().getTime() + milliseconds);
+    };
+
+    /**
+     * Setter for the session timeout
+     * @param {int} timeout - epoch timestamp
+     */
+    Session.prototype.setSessionTimeout = function (timeout) {
+        this.logger.log('[Function:(Session).setSessionTimeout]' +  (timeout ? '\ntimeout:' + timeout : ''));
+        clearTimeout(this.sessionTimeoutReference);
+        this.expirationDate = timeout;
+        AMA.Storage.set(this.StorageKeys.SESSION_EXPIRATION, this.expirationDate);
+        this.sessionTimeoutReference = setTimeout(this.expireSession.bind(this),
+            this.expirationDate - (new Date()).getTime());
+    };
+    return Session;
+}());
+
+module.exports = AMA.Session;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-AMA.html">AMA</a></li></ul><h3>Classes</h3><ul><li><a href="AMA.Client.html">Client</a></li><li><a href="AMA.Manager.html">Manager</a></li><li><a href="AMA.Session.html">Session</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Mar 19 2015 14:39:22 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

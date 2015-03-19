@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Index</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Index</h1>
+    
+    
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>Amazon Mobile Analytics Client for JavaScript</h1>
+<p><strong>Developer Preview:</strong> We welcome developer feedback on this project. You can reach us by creating an issue on the 
+GitHub repository or posting to the Amazon Mobile Analytics forums:
+<em> <a href="https://github.com/aws/aws-sdk-mobile-analytics-js">https://github.com/aws/aws-sdk-mobile-analytics-js</a>
+</em> <a href="https://forums.aws.amazon.com/forum.jspa?forumID=174">https://forums.aws.amazon.com/forum.jspa?forumID=174</a></p>
+<h1>Introduction</h1>
+<p>The Mobile Analytics Client for JavaScript allows JavaScript enabled applications to create and submit events for analysis in the AWS Console and through Auto Export to S3 and Redshift. The library uses the browser's local storage API to create a local cache for the data, allowing your web application to batch and record events even when the app is offline.</p>
+<h2>Setup</h2>
+<ol>
+<li><p>Download and include the AWS JavaScript SDK (minimum version 2.1.18):</p>
+<ul>
+<li><a href="http://aws.amazon.com/sdk-for-browser/">http://aws.amazon.com/sdk-for-browser/</a></li>
+</ul>
+</li>
+<li><p>Download and include the Amazon Mobile Analytics Client for JavaScript:</p>
+<ul>
+<li><a href="https://raw.githubusercontent.com/aws/aws-sdk-mobile-analytics-js/master/dist/aws-sdk-mobile-analytics.min.js">/dist/aws-sdk-mobile-analytics.min.js</a></li>
+</ul>
+</li>
+</ol>
+<pre class="prettyprint">
+    &lt;script src="/js/aws-sdk.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/js/aws-sdk-mobile-analytics.min.js"&gt;&lt;/script&gt;
+</pre>
+
+<h2>Usage</h2>
+<p><strong>Step 1.</strong> Log in to the <a href="https://console.aws.amazon.com/mobileanalytics/home/?region=us-east-1">Amazon Mobile Analytics management console</a> and create a new app. Be sure to note your App Id and Cognito Identity Pool Id.
+* <a href="https://console.aws.amazon.com/mobileanalytics/home/?region=us-east-1">https://console.aws.amazon.com/mobileanalytics/home/?region=us-east-1</a></p>
+<p><strong>Step 2.</strong> Initialize the credentials provider using a Cognito Identity Pool ID. This is necessary for the AWS SDK to manage authentication to the Amazon Mobile Analytics REST API.</p>
+<pre class="prettyprint">
+    AWS.config.region = 'us-east-1';
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: COGNITO_IDENTITY_POOL_ID   //Required e.g. 'us-east-1:12345678-c1ab-4122-913b-22d16971337b'
+    });
+</pre>
+
+<p><strong>Step 3.</strong> Instantiate the Mobile Analytics Manager, including your App ID generated in Step 1, above. Session events will be automatically recorded and the client will batch and automatically submit events to Amazon Mobile Analytics every 10 seconds.</p>
+<pre class="prettyprint">
+    var options = {
+        appId : MOBILE_ANALYTICS_APP_ID   //Required e.g. 'c5d69c75a92646b8953126437d92c007'
+    };
+    mobileAnalyticsClient = new AMA.Manager(options);
+</pre>
+
+<p>To manually force an event submission you can call:</p>
+<pre class="prettyprint">
+    mobileAnalyticsClient.submitEvents();
+</pre>
+
+<h2>Additional Options</h2>
+<h3>Custom Events</h3>
+<p><a name="customevent"></a>
+You can optionally add custom events to capture additional information you find valuable.</p>
+<pre class="prettyprint">
+    mobileAnalyticsClient.recordEvent('CUSTOM EVENT NAME', {
+            'ATTRIBUTE_1_NAME': 'ATTRIBUTE_1_VALUE',
+            'ATTRIBUTE_2_NAME': 'ATTRIBUTE_2_VALUE'
+            /* ... */
+        }, {
+            'METRIC_1_NAME': 1,
+            'METRIC_2_NAME': 99.3
+            /* ... */
+        });
+</pre>
+
+
+<h3>Session Settings</h3>
+<p>By default a session lasts 10 minutes. You can override this default setting when initializing the Mobile Analytics Manager by including &quot;sessionLength&quot; in the &quot;options&quot; object.</p>
+<pre class="prettyprint">
+    var options = {
+        appId : MOBILE_ANALYTICS_APP_ID, 
+        sessionLength: 300000            //Session Length in milliseconds.  This will evaluate to 5min.
+    };
+    mobileAnalyticsClient = new AMA.Manager(options);
+</pre>
+
+<p>A session's timeout can also be updated to allow for continuation of a session.</p>
+<pre class="prettyprint">
+    //This will set the current session to expire in 5 seconds from now.
+    mobileAnalyticsClient.resetSessionTimeout(5000); 
+
+    //This will reset the current session's expiration time using the time specified during initialization. 
+    //If the default setting was used (10 minutes) then the session will expire 10 minutes from now. 
+    mobileAnalyticsClient.resetSessionTimeout();
+</pre>
+
+<h3>Record Monetization Event</h3>
+<p>You can record monetization events to enable reports such as Average Revenue Per User (ARPU) and more.</p>
+<pre class="prettyprint">
+    mobileAnalyticsClient.recordMonetizationEvent(
+        {
+            productId : PRODUCT_ID,   //Required e.g. 'My Example Product'
+            price : PRICE,            //Required e.g. 1.99
+            quantity : QUANTITY,      //Required e.g. 1
+            currency : CURRENCY_CODE  //Optional ISO currency code e.g. 'USD'
+        }, 
+        {/* Custom Attributes */}, 
+        {/* Custom Metrics */}
+    );
+</pre>
+
+<h3>Add App Details to Events</h3>
+<p>Additional app and environment details can be added to the &quot;options&quot; object when initializing the SDK. These details will be captured and applied to all events and can be useful if using Auto Export for custom analysis of your data.</p>
+<pre class="prettyprint">
+    var options = {
+        appId : MOBILE_ANALYTICS_APP_ID,       //Required e.g. 'c5d69c75a92646b8953126437d92c007'
+        appTitle : APP_TITLE,                  //Optional e.g. 'Example App'
+        appVersionName : APP_VERSION_NAME,     //Optional e.g. '1.4.1'
+        appVersionCode : APP_VERSION_CODE,     //Optional e.g. '42'
+        appPackageName : APP_PACKAGE_NAME,     //Optional e.g. 'com.amazon.example'
+        make : DEVICE_MAKE,                    //Optional e.g. 'Amazon'
+        model : DEVICE_MODEL,                  //Optional e.g. 'KFTT'
+        platform : DEVICE_PLATFORM,            //Optional e.g. 'Android'
+        platformVersion : DEVICE_PLATFORM_VER  //Optional e.g. '4.4'
+    };
+    mobileAnalyticsClient = new AMA.Manager(options);
+</pre>
+
+<p>Please note, if device details are not specified Amazon Mobile Analytics will make best efforts to determine these values based on the User-Agent header value. It is always better to specify these values during initialization if they are available. </p>
+<h3>Further Documentation</h3>
+<p>Further documentation and advanced configurations can be found here:</p>
+<p><a href="https://aws.github.io/aws-sdk-mobile-analytics-js/doc/AMA.Manager.html">https://aws.github.io/aws-sdk-mobile-analytics-js/doc/AMA.Manager.html</a></p>
+<h2>Network Configuration</h2>
+<p>The Amazon Mobile Analytics JavaScript SDK will make requests to the following endpoints
+<em> For Event Submission: &quot;<a href="https://mobileanalytics.us-east-1.amazonaws.com">https://mobileanalytics.us-east-1.amazonaws.com</a>&quot;
+</em> For Cognito Authentication: &quot;<a href="https://cognito-identity.us-east-1.amazonaws.com">https://cognito-identity.us-east-1.amazonaws.com</a>&quot;
+** This endpoint may change based on which region your Identity Pool was created in.</p>
+<p>For most frameworks you can whitelist both domains by whitelisting all AWS endpoints with &quot;*.amazonaws.com&quot;.</p>
+<h2>Change Log</h2>
+<p><strong>v0.9.0:</strong>
+* Initial release. Developer preview.</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-AMA.html">AMA</a></li></ul><h3>Classes</h3><ul><li><a href="AMA.Client.html">Client</a></li><li><a href="AMA.Manager.html">Manager</a></li><li><a href="AMA.Session.html">Session</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Mar 19 2015 14:39:22 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
