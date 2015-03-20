@@ -35,20 +35,27 @@ AMA.Util = require('./MobileAnalyticsUtilities.js');
  * @property {string}                     appId - The Application ID from the Amazon Mobile Analytics Console
  * @property {string}                     [apiVersion=2014-06-05] - The version of the Mobile Analytics API to submit to.
  * @property {object}                     [provider=AWS.config.credentials] - Credentials to use for submitting events.
- *                                                              **Never check in credentials to source control.
+ *                                                                            **Never check in credentials to source
+ *                                                                            control.
  * @property {boolean}                    [autoSubmitEvents=true] - Automatically Submit Events, Default: true
  * @property {number}                     [autoSubmitInterval=10000] - Interval to try to submit events in ms, Default: 10s
  * @property {number}                     [batchSizeLimit=256000] - Batch Size in Bytes, Default: 256Kb
- * @property {AMA.Client.SubmitCallback}  [submitCallback=] - Callback function that is executed when events are successfully submitted
- * @property {AMA.Client.Attributes}      [globalAttributes=] - Interval to try to submit events in ms, Default: 60s
- * @property {AMA.Client.Metrics}         [globalMetrics=] - Interval to try to submit events in ms, Default: 60s
- * @property {string}                     [clientId=GUID()] - A unique identifier representing this installation instance of your app. This will be managed and persisted by the SDK by default.
+ * @property {AMA.Client.SubmitCallback}  [submitCallback=] - Callback function that is executed when events are
+ *                                                            successfully submitted
+ * @property {AMA.Client.Attributes}      [globalAttributes=] - Attribute to be applied to every event, may be
+ *                                                              overwritten with a different value when recording events.
+ * @property {AMA.Client.Metrics}         [globalMetrics=] - Metric to be applied to every event, may be overwritten
+ *                                                           with a different value when recording events.
+ * @property {string}                     [clientId=GUID()] - A unique identifier representing this installation instance
+ *                                                            of your app. This will be managed and persisted by the SDK
+ *                                                            by default.
  * @property {string}                     [appTitle=] - The title of your app. For example, My App.
  * @property {string}                     [appVersionName=] - The version of your app. For example, V2.0.
  * @property {string}                     [appVersionCode=] - The version code for your app. For example, 3.
  * @property {string}                     [appPackageName=] - The name of your package. For example, com.example.my_app.
  * @property {string}                     [platform=] - The operating system of the device. For example, iPhoneOS.
- * @property {string}                     [plaformVersion=] - The version of the operating system of the device. For example, 4.0.4.
+ * @property {string}                     [plaformVersion=] - The version of the operating system of the device.
+ *                                                            For example, 4.0.4.
  * @property {string}                     [model=] - The model of the device. For example, Nexus.
  * @property {string}                     [make=] - The manufacturer of the device. For example, Samsung.
  * @property {string}                     [locale=] - The locale of the device. For example, en_US.
