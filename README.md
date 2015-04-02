@@ -1,4 +1,4 @@
-# Amazon Mobile Analytics Client for JavaScript
+# Amazon Mobile Analytics SDK for JavaScript
 
 **Developer Preview:** We welcome developer feedback on this project. You can reach us by creating an issue on the 
 GitHub repository or posting to the Amazon Mobile Analytics forums:
@@ -7,14 +7,14 @@ GitHub repository or posting to the Amazon Mobile Analytics forums:
 
 Introduction
 ============
-The Mobile Analytics Client for JavaScript allows JavaScript enabled applications to create and submit events for analysis in the AWS Console and through Auto Export to S3 and Redshift. The library uses the browser's local storage API to create a local cache for the data, allowing your web application to batch and record events even when the app is offline.
+The Mobile Analytics SDK for JavaScript allows JavaScript enabled applications to create and submit events for analysis in the AWS Console and through Auto Export to S3 and Redshift. The library uses the browser's local storage API to create a local cache for the data, allowing your web application to batch and record events even when the app is offline.
 
 ## Setup
 
 1. Download and include the AWS JavaScript SDK (minimum version 2.1.18):
   * http://aws.amazon.com/sdk-for-browser/
 
-2. Download and include the Amazon Mobile Analytics Client for JavaScript:
+2. Download and include the Amazon Mobile Analytics SDK for JavaScript:
   * [/dist/aws-sdk-mobile-analytics.min.js](https://raw.githubusercontent.com/aws/aws-sdk-mobile-analytics-js/master/dist/aws-sdk-mobile-analytics.min.js)
 
 <pre class="prettyprint">
@@ -52,7 +52,6 @@ To manually force an event submission you can call:
 
 ## Additional Options
 ### Custom Events
-<a name="customevent"></a>
 You can optionally add custom events to capture additional information you find valuable.
 
 <pre class="prettyprint">
