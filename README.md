@@ -117,7 +117,7 @@ Additional app and environment details can be added to the "options" object when
         appPackageName : APP_PACKAGE_NAME,     //Optional e.g. 'com.amazon.example'
         make : DEVICE_MAKE,                    //Optional e.g. 'Amazon'
         model : DEVICE_MODEL,                  //Optional e.g. 'KFTT'
-        platform : DEVICE_PLATFORM,            //Optional valid values: 'Android', 'iPhoneOS'
+        platform : DEVICE_PLATFORM,            //Optional valid values: 'Android', 'iPhoneOS', 'WindowsPhone', 'Blackberry', 'Windows', 'MacOS', 'Linux'
         platformVersion : DEVICE_PLATFORM_VER  //Optional e.g. '4.4'
     };
     mobileAnalyticsClient = new AMA.Manager(options);
