@@ -111,13 +111,13 @@ Additional app and environment details can be added to the "options" object when
 <pre class="prettyprint">
     var options = {
         appId : MOBILE_ANALYTICS_APP_ID,       //Required e.g. 'c5d69c75a92646b8953126437d92c007'
+        platform : DEVICE_PLATFORM,            //Required valid values: 'Android', 'iPhoneOS', 'WindowsPhone', 'Blackberry', 'Windows', 'MacOS', 'Linux'
         appTitle : APP_TITLE,                  //Optional e.g. 'Example App'
         appVersionName : APP_VERSION_NAME,     //Optional e.g. '1.4.1'
         appVersionCode : APP_VERSION_CODE,     //Optional e.g. '42'
         appPackageName : APP_PACKAGE_NAME,     //Optional e.g. 'com.amazon.example'
         make : DEVICE_MAKE,                    //Optional e.g. 'Amazon'
         model : DEVICE_MODEL,                  //Optional e.g. 'KFTT'
-        platform : DEVICE_PLATFORM,            //Optional valid values: 'Android', 'iPhoneOS', 'WindowsPhone', 'Blackberry', 'Windows', 'MacOS', 'Linux'
         platformVersion : DEVICE_PLATFORM_VER  //Optional e.g. '4.4'
     };
     mobileAnalyticsClient = new AMA.Manager(options);
