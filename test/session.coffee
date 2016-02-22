@@ -12,11 +12,12 @@ AWS = helpers.AWS
 AMA = helpers.AMA
 expiration = null
 session = null
+storage = new AMA.Storage('AppID')
 
 describe 'AMA.Session', ->
   describe 'Initialize Session (Default Values)', ->
     before ->
-      session = new AMA.Session()
+      session = new AMA.Session({storage: storage})
     it 'should be initialized', ->
       expect(session).not.to.be.null
       expect(session).not.to.be.undefined
@@ -29,65 +30,65 @@ describe 'AMA.Session', ->
       expect(session.StorageKeys.SESSION_EXPIRATION).to.have.string('MobileAnalyticsSessionExpiration')
       expect(session.StorageKeys.SESSION_EXPIRATION).to.have.string(session.id)
     it 'should persist session id', ->
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_ID)).not.to.be.null
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_ID)).to.eql(session.id)
+      expect(storage.get(session.StorageKeys.SESSION_ID)).not.to.be.null
+      expect(storage.get(session.StorageKeys.SESSION_ID)).to.eql(session.id)
     it 'should persist expiration', ->
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_EXPIRATION)).not.to.be.null
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.eql(session.expirationDate)
+      expect(storage.get(session.StorageKeys.SESSION_EXPIRATION)).not.to.be.null
+      expect(storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.eql(session.expirationDate)
     it 'should have a number expiration', ->
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.be.a('number')
+      expect(storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.be.a('number')
       expect(session.expirationDate).to.be.a('number')
     it 'should have an integer expiration', ->
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_EXPIRATION) % 1).to.eql(0)
+      expect(storage.get(session.StorageKeys.SESSION_EXPIRATION) % 1).to.eql(0)
       expect(session.expirationDate % 1).to.eql(0)
   describe 'Clear Session', ->
     before ->
-      session = new AMA.Session()
+      session = new AMA.Session({storage: storage})
       session.expireSession()
     it 'should clear session id', ->
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_ID)).to.be.undefined
+      expect(storage.get(session.StorageKeys.SESSION_ID)).to.be.undefined
     it 'should clear session expiration', ->
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.be.undefined
+      expect(storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.be.undefined
   ###
     Needs duplicate session/expiration definitions due to Storage getting reloaded in another file.
   ###
   describe 'Extend Session (Default Values)', ->
     before ->
-      session = new AMA.Session()
+      session = new AMA.Session({storage: storage})
       expiration = session.expirationDate
       session.extendSession()
     it 'should not be original expiration date', ->
       expect(expiration).to.not.eql(session.expirationDate)
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.not.eql(expiration)
+      expect(storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.not.eql(expiration)
     it 'should persist new expiration date', ->
-      session = new AMA.Session()
+      session = new AMA.Session({storage: storage})
       expiration = session.expirationDate
       session.extendSession()
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.eql(session.expirationDate)
+      expect(storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.eql(session.expirationDate)
     it 'should be 30min later', ->
       expect(session.expirationDate).to.eql(expiration + session.sessionLength)
   describe 'Extend Session (1 min later)', ->
     before ->
-      session = new AMA.Session()
+      session = new AMA.Session({storage: storage})
       expiration = session.expirationDate
       session.extendSession(60000)
     it 'should not be original expiration date', ->
       expect(expiration).to.not.eql(session.expirationDate)
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.not.eql(expiration)
+      expect(storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.not.eql(expiration)
     it 'should persist new expiration date', ->
-      session = new AMA.Session()
+      session = new AMA.Session({storage: storage})
       expiration = session.expirationDate
       session.extendSession(60000)
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.eql(session.expirationDate)
+      expect(storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.eql(session.expirationDate)
     it 'should be 60 sec later', ->
       expect(session.expirationDate).to.eql(expiration + 60000)
   describe 'Reset Session Timeout (1 min from now)', ->
     beforeEach ->
-      session = new AMA.Session()
+      session = new AMA.Session({storage: storage})
       expiration = session.expirationDate
       session.resetSessionTimeout(60000)
     it 'should not be original expiration date', ->
       expect(expiration).to.not.eql(session.expirationDate)
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.not.eql(expiration)
+      expect(storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.not.eql(expiration)
     it 'should persist new expiration date', ->
-      expect(AMA.Storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.eql(session.expirationDate)
+      expect(storage.get(session.StorageKeys.SESSION_EXPIRATION)).to.eql(session.expirationDate)

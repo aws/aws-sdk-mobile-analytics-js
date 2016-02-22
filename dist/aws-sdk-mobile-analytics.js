@@ -17,29 +17,40 @@ AMA.Util = require('./MobileAnalyticsUtilities.js');
  * @property {string}                     appId - The Application ID from the Amazon Mobile Analytics Console
  * @property {string}                     [apiVersion=2014-06-05] - The version of the Mobile Analytics API to submit to.
  * @property {object}                     [provider=AWS.config.credentials] - Credentials to use for submitting events.
- *                                                              **Never check in credentials to source control.
+ *                                                                            **Never check in credentials to source
+ *                                                                            control.
  * @property {boolean}                    [autoSubmitEvents=true] - Automatically Submit Events, Default: true
- * @property {number}                     [autoSubmitInterval=10000] - Interval to try to submit events in ms, Default: 10s
+ * @property {number}                     [autoSubmitInterval=10000] - Interval to try to submit events in ms,
+ *                                                                     Default: 10s
  * @property {number}                     [batchSizeLimit=256000] - Batch Size in Bytes, Default: 256Kb
- * @property {AMA.Client.SubmitCallback}  [submitCallback=] - Callback function that is executed when events are successfully submitted
- * @property {AMA.Client.Attributes}      [globalAttributes=] - Interval to try to submit events in ms, Default: 60s
- * @property {AMA.Client.Metrics}         [globalMetrics=] - Interval to try to submit events in ms, Default: 60s
- * @property {string}                     [clientId=GUID()] - A unique identifier representing this installation instance of your app. This will be managed and persisted by the SDK by default.
+ * @property {AMA.Client.SubmitCallback}  [submitCallback=] - Callback function that is executed when events are
+ *                                                            successfully submitted
+ * @property {AMA.Client.Attributes}      [globalAttributes=] - Attribute to be applied to every event, may be
+ *                                                              overwritten with a different value when recording events.
+ * @property {AMA.Client.Metrics}         [globalMetrics=] - Metric to be applied to every event, may be overwritten
+ *                                                           with a different value when recording events.
+ * @property {string}                     [clientId=GUID()] - A unique identifier representing this installation instance
+ *                                                            of your app. This will be managed and persisted by the SDK
+ *                                                            by default.
  * @property {string}                     [appTitle=] - The title of your app. For example, My App.
  * @property {string}                     [appVersionName=] - The version of your app. For example, V2.0.
  * @property {string}                     [appVersionCode=] - The version code for your app. For example, 3.
  * @property {string}                     [appPackageName=] - The name of your package. For example, com.example.my_app.
  * @property {string}                     [platform=] - The operating system of the device. For example, iPhoneOS.
- * @property {string}                     [plaformVersion=] - The version of the operating system of the device. For example, 4.0.4.
+ * @property {string}                     [plaformVersion=] - The version of the operating system of the device.
+ *                                                            For example, 4.0.4.
  * @property {string}                     [model=] - The model of the device. For example, Nexus.
  * @property {string}                     [make=] - The manufacturer of the device. For example, Samsung.
  * @property {string}                     [locale=] - The locale of the device. For example, en_US.
  * @property {AMA.Client.Logger}          [logger=] - Object of logger functions
+ * @property {AMA.Storage}                [storage=] - Storage client to persist events, will create a new AMA.Storage if not provided
+ * @property {Object}                     [clientOptions=] - Low level client options to be passed to the AWS.MobileAnalytics low level SDK
  */
 
 /**
  * @typedef AMA.Client.Logger
- * @description Uses Javascript Style log levels, one function for each level.  Basic usage is to pass the console object which will output directly to browser developer console.
+ * @description Uses Javascript Style log levels, one function for each level.  Basic usage is to pass the console object
+ *              which will output directly to browser developer console.
  * @property {Function} [log=] - Logger for client log level messages
  * @property {Function} [info=] - Logger for interaction level messages
  * @property {Function} [warn=] - Logger for warn level messages
@@ -48,12 +59,14 @@ AMA.Util = require('./MobileAnalyticsUtilities.js');
 /**
  * @typedef AMA.Client.Attributes
  * @type {object}
- * @description A collection of key-value pairs that give additional context to the event. The key-value pairs are specified by the developer.
+ * @description A collection of key-value pairs that give additional context to the event. The key-value pairs are
+ *              specified by the developer.
  */
 /**
  * @typedef AMA.Client.Metrics
  * @type {object}
- * @description A collection of key-value pairs that gives additional measurable context to the event. The pairs specified by the developer.
+ * @description A collection of key-value pairs that gives additional measurable context to the event. The pairs
+ *              specified by the developer.
  */
 /**
  * @callback AMA.Client.SubmitCallback
@@ -65,10 +78,15 @@ AMA.Util = require('./MobileAnalyticsUtilities.js');
  * @typedef AMA.Client.Event
  * @type {object}
  * @description A JSON object representing an event occurrence in your app and consists of the following:
- * @property {string} eventType - A name signifying an event that occurred in your app. This is used for grouping and aggregating like events together for reporting purposes.
- * @property {string} timestamp - The time the event occurred in ISO 8601 standard date time format. For example, 2014-06-30T19:07:47.885Z
- * @property {AMA.Client.Attributes} [attributes=] - A collection of key-value pairs that give additional context to the event. The key-value pairs are specified by the developer. This collection can be empty or the attribute object can be omitted.
- * @property {AMA.Client.Metrics} [metrics=] - A collection of key-value pairs that gives additional measurable context to the event. The pairs specified by the developer.
+ * @property {string} eventType - A name signifying an event that occurred in your app. This is used for grouping and
+ *                                aggregating like events together for reporting purposes.
+ * @property {string} timestamp - The time the event occurred in ISO 8601 standard date time format.
+ *                                For example, 2014-06-30T19:07:47.885Z
+ * @property {AMA.Client.Attributes} [attributes=] - A collection of key-value pairs that give additional context to
+ *                                                   the event. The key-value pairs are specified by the developer.
+ *                                                   This collection can be empty or the attribute object can be omitted.
+ * @property {AMA.Client.Metrics} [metrics=] - A collection of key-value pairs that gives additional measurable context
+ *                                             to the event. The pairs specified by the developer.
  * @property {AMA.Session} session - Describes the session. Session information is required on ALL events.
  */
 /**
@@ -93,9 +111,9 @@ AMA.Client = (function () {
                     //throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
                     this.logger.error('Function.prototype.bind - what is trying to be bound is not callable');
                 }
-                var aArgs = Array.prototype.slice.call(arguments, 1),
+                var aArgs   = Array.prototype.slice.call(arguments, 1),
                     fToBind = this,
-                    fBound = function () {
+                    fBound  = function () {
                         return fToBind.apply(
                             this instanceof AMA.Util.NOP && oThis ? this : oThis,
                             aArgs.concat(Array.prototype.slice.call(arguments))
@@ -110,16 +128,15 @@ AMA.Client = (function () {
         this.options = options || {};
         this.options.logger = this.options.logger || {};
         this.logger = {
-            log: this.options.logger.log || AMA.Util.NOP,
-            info: this.options.logger.info || AMA.Util.NOP,
-            warn: this.options.logger.warn || AMA.Util.NOP,
+            log  : this.options.logger.log || AMA.Util.NOP,
+            info : this.options.logger.info || AMA.Util.NOP,
+            warn : this.options.logger.warn || AMA.Util.NOP,
             error: this.options.logger.error || AMA.Util.NOP
         };
         this.logger.log = this.logger.log.bind(this.options.logger);
         this.logger.info = this.logger.info.bind(this.options.logger);
         this.logger.warn = this.logger.warn.bind(this.options.logger);
         this.logger.error = this.logger.error.bind(this.options.logger);
-        AMA.Storage.setLogger(this.logger);
 
         this.logger.log('[Function:(AMA)Client Constructor]' +
             (options ? '\noptions:' + JSON.stringify(options) : ''));
@@ -131,83 +148,101 @@ AMA.Client = (function () {
         if (options.platform === undefined) {
             this.logger.error('AMA.Client must be initialized with a platform');
         }
+        this.storage = this.options.storage || new AMA.Storage(options.appId);
+        this.storage.setLogger(this.logger);
+
         this.options.apiVersion = this.options.apiVersion || '2014-06-05';
         this.options.provider = this.options.provider || AWS.config.credentials;
-        this.options.autoSubmitEvents = (options.autoSubmitEvents !== undefined) ? options.autoSubmitEvents : true;
+        this.options.autoSubmitEvents = options.autoSubmitEvents !== false;
         this.options.autoSubmitInterval = this.options.autoSubmitInterval || 10000;
         this.options.batchSizeLimit = this.options.batchSizeLimit || 256000;
         this.options.submitCallback = this.options.submitCallback || AMA.Util.NOP;
         this.options.globalAttributes = this.options.globalAttributes || {};
         this.options.globalMetrics = this.options.globalMetrics || {};
+        this.options.clientOptions = this.options.clientOptions || {};
+        this.options.clientOptions.provider = this.options.clientOptions.provider || this.options.provider;
+        this.options.clientOptions.apiVersion = this.options.clientOptions.apiVersion || this.options.apiVersion;
+        this.options.clientOptions.correctClockSkew = this.options.clientOptions.correctClockSkew !== false;
+        this.options.clientOptions.retryDelayOptions = this.options.clientOptions.retryDelayOptions || {};
+        this.options.clientOptions.retryDelayOptions.base = this.options.clientOptions.retryDelayOptions.base || 3000;
 
-        AMA.Storage.set(
+        this.storage.set(
             AMA.StorageKeys.GLOBAL_ATTRIBUTES,
             AMA.Util.mergeObjects(this.options.globalAttributes,
-                    AMA.Storage.get(AMA.StorageKeys.GLOBAL_ATTRIBUTES) || {})
+                this.storage.get(AMA.StorageKeys.GLOBAL_ATTRIBUTES) || {})
         );
-        AMA.Storage.set(
+        this.storage.set(
             AMA.StorageKeys.GLOBAL_METRICS,
             AMA.Util.mergeObjects(this.options.globalMetrics,
-                    AMA.Storage.get(AMA.StorageKeys.GLOBAL_METRICS) || {})
+                this.storage.get(AMA.StorageKeys.GLOBAL_METRICS) || {})
         );
 
         this.options.clientContext = this.options.clientContext || {
-            'client': {
-                'client_id': this.options.clientId || AMA.Util.GetClientId(),
-                'app_title': this.options.appTitle,
-                'app_version_name': this.options.appVersionName,
-                'app_version_code': this.options.appVersionCode,
-                'app_package_name': this.options.appPackageName
-            },
-            'env': {
-                'platform': this.options.platform,
-                'platform_version': this.options.platformVersion,
-                'model': this.options.model,
-                'make': this.options.make,
-                'locale': this.options.locale
-            },
-            'services': {
-                'mobile_analytics': {
-                    'app_id': this.options.appId,
-                    'sdk_name': 'aws-sdk-mobile-analytics-js',
-                    'sdk_version': '0.9.0'
-                }
-            },
-            'custom': {
-            }
-        };
+                'client'  : {
+                    'client_id'       : this.options.clientId || this.storage.get(AMA.StorageKeys.CLIENT_ID) || AMA.Util.GUID(),
+                    'app_title'       : this.options.appTitle,
+                    'app_version_name': this.options.appVersionName,
+                    'app_version_code': this.options.appVersionCode,
+                    'app_package_name': this.options.appPackageName
+                },
+                'env'     : {
+                    'platform'        : this.options.platform,
+                    'platform_version': this.options.platformVersion,
+                    'model'           : this.options.model,
+                    'make'            : this.options.make,
+                    'locale'          : this.options.locale
+                },
+                'services': {
+                    'mobile_analytics': {
+                        'app_id'     : this.options.appId,
+                        'sdk_name'   : 'aws-sdk-mobile-analytics-js',
+                        'sdk_version': '0.9.1' + ':' + AWS.VERSION
+                    }
+                },
+                'custom'  : {}
+            };
+
+        this.storage.set(AMA.StorageKeys.CLIENT_ID, this.options.clientContext.client.client_id);
 
         this.StorageKeys = {
-            'EVENTS': 'AWSMobileAnalyticsEventStorage',
-            'BATCHES': 'AWSMobileAnalyticsBatchStorage',
+            'EVENTS'     : 'AWSMobileAnalyticsEventStorage',
+            'BATCHES'    : 'AWSMobileAnalyticsBatchStorage',
             'BATCH_INDEX': 'AWSMobileAnalyticsBatchIndexStorage'
         };
 
         this.outputs = {};
-        this.outputs.MobileAnalytics = new AWS.MobileAnalytics({ apiVersion: this.options.apiVersion,
-                                                                   provider: this.options.provider });
+        this.outputs.MobileAnalytics = new AWS.MobileAnalytics(this.options.clientOptions);
         this.outputs.timeoutReference = null;
+        this.outputs.batchesInFlight = {};
 
-        this.outputs.events = AMA.Storage.get(this.StorageKeys.EVENTS) || [];
-        this.outputs.batches = AMA.Storage.get(this.StorageKeys.BATCHES) || {};
-        this.outputs.batchIndex = AMA.Storage.get(this.StorageKeys.BATCH_INDEX) || [];
+        this.outputs.events = this.storage.get(this.StorageKeys.EVENTS) || [];
+        this.outputs.batches = this.storage.get(this.StorageKeys.BATCHES) || {};
+        this.outputs.batchIndex = this.storage.get(this.StorageKeys.BATCH_INDEX) || [];
 
-        this.submitEvents();
+        if (this.options.autoSubmitEvents) {
+            this.submitEvents();
+        }
     };
 
     Client.prototype.validateEvent = function (event) {
         var self = this, invalidMetrics = [];
+
         function customNameErrorFilter(name) {
-            if (name.length === 0) { return true; }
+            if (name.length === 0) {
+                return true;
+            }
             return name.length > 50;
         }
+
         function customAttrValueErrorFilter(name) {
             return event.attributes[name] && event.attributes[name].length > 200;
         }
+
         function validationError(errorMsg) {
             self.logger.error(errorMsg);
             return null;
         }
+
         invalidMetrics = Object.keys(event.metrics).filter(function (metricName) {
             return typeof event.metrics[metricName] !== 'number';
         });
@@ -268,15 +303,15 @@ AMA.Client = (function () {
             }
         });
         var event = {
-            eventType: eventType,
-            timestamp: new Date().toISOString(),
-            session: {
-                id: session.id,
+            eventType : eventType,
+            timestamp : new Date().toISOString(),
+            session   : {
+                id            : session.id,
                 startTimestamp: session.startTimestamp
             },
-            version: 'v2.0',
+            version   : 'v2.0',
             attributes: attributes,
-            metrics: metrics
+            metrics   : metrics
         };
         if (session.stopTimestamp) {
             event.session.stopTimestamp = session.stopTimestamp;
@@ -298,7 +333,7 @@ AMA.Client = (function () {
             (event ? '\nevent:' + JSON.stringify(event) : ''));
         //Push adds to the end of array and returns the size of the array
         var eventIndex = this.outputs.events.push(event);
-        AMA.Storage.set(this.StorageKeys.EVENTS, this.outputs.events);
+        this.storage.set(this.StorageKeys.EVENTS, this.outputs.events);
         return (eventIndex - 1);
     };
 
@@ -375,60 +410,147 @@ AMA.Client = (function () {
         this.logger.log('[Function:(AMA.Client).submitEvents]' +
             (options ? '\noptions:' + JSON.stringify(options) : ''));
 
-        if (this.outputs.lastSubmitTimestamp && new Date().getTime() - this.outputs.lastSubmitTimestamp < 1000) {
-            this.logger.warn('Prevented multiple submissions in under a second');
-            return [];
-        }
-        this.outputs.lastSubmitTimestamp = new Date().getTime();
-        var lastIndex, batchId, eventBatch;
-        options = options || {};
+
         if (this.options.autoSubmitEvents) {
             clearTimeout(this.outputs.timeoutReference);
             this.outputs.timeoutReference = setTimeout(this.submitEvents.bind(this), this.options.autoSubmitInterval);
         }
-        while (this.outputs.events.length > 0) {
-            lastIndex = this.outputs.events.length;
-            this.logger.log(this.outputs.events.length + ' events to be submitted');
-            while (lastIndex > 1 &&
-                    AMA.Util.getRequestBodySize(this.outputs.events.slice(0, lastIndex)) > this.options.batchSizeLimit) {
-                this.logger.log('Finding Batch Size (' + this.options.batchSizeLimit + '): ' +
-                    lastIndex + '(' +
-                    AMA.Util.getRequestBodySize(this.outputs.events.slice(0, lastIndex)) +
-                    ')');
-                lastIndex -= 1;
-            }
-            eventBatch = this.outputs.events.slice(0, lastIndex);
-            this.logger.log(eventBatch.length + ' events in batch');
-            if (AMA.Util.getRequestBodySize(eventBatch) < 512000) {
-                batchId = AMA.Util.GUID();
-                //Save batch so data is not lost.
-                this.outputs.batches[batchId] = eventBatch;
-                AMA.Storage.set(this.StorageKeys.BATCHES, this.outputs.batches);
-                this.outputs.batchIndex.push(batchId);
-                AMA.Storage.set(this.StorageKeys.BATCH_INDEX, this.outputs.batchIndex);
-                //Clear event queue
-                this.outputs.events.splice(0, lastIndex);
-                AMA.Storage.set(this.StorageKeys.EVENTS, this.outputs.events);
-            } else {
-                this.logger.error('Events too large');
-            }
+        var warnMessage;
+        //Get distribution of retries across clients by introducing a weighted rand.
+        //Probability will increase over time to an upper limit of 60s
+        if (this.outputs.isThrottled && this.throttlingSuppressionFunction() < Math.random()) {
+            warnMessage = 'Prevented submission while throttled';
+        } else if (Object.keys(this.outputs.batchesInFlight).length > 0) {
+            warnMessage = 'Prevented submission while batches are in flight';
+        } else if (this.outputs.batches.length === 0 && this.outputs.events.length === 0) {
+            warnMessage = 'No batches or events to be submitted';
+        } else if (this.outputs.lastSubmitTimestamp && AMA.Util.timestamp() - this.outputs.lastSubmitTimestamp < 1000) {
+            warnMessage = 'Prevented multiple submissions in under a second';
         }
+        if (warnMessage) {
+            this.logger.warn(warnMessage);
+            return [];
+        }
+        this.generateBatches();
+
+        this.outputs.lastSubmitTimestamp = AMA.Util.timestamp();
+        if (this.outputs.isThrottled) {
+            //Only submit the first batch if throttled
+            this.logger.warn('Is throttled submitting first batch');
+            options.batchId = this.outputs.batchIndex[0];
+            return [this.submitBatchById(options)];
+        }
+
         return this.submitAllBatches(options);
     };
+
+    Client.prototype.throttlingSuppressionFunction = function (timestamp) {
+        timestamp = timestamp || AMA.Util.timestamp();
+        return Math.pow(timestamp - this.outputs.lastSubmitTimestamp, 2) / Math.pow(60000, 2);
+    };
+
+    Client.prototype.generateBatches = function () {
+        while (this.outputs.events.length > 0) {
+            var lastIndex = this.outputs.events.length;
+            this.logger.log(this.outputs.events.length + ' events to be submitted');
+            while (lastIndex > 1 &&
+            AMA.Util.getRequestBodySize(this.outputs.events.slice(0, lastIndex)) > this.options.batchSizeLimit) {
+                this.logger.log('Finding Batch Size (' + this.options.batchSizeLimit + '): ' + lastIndex + '(' +
+                    AMA.Util.getRequestBodySize(this.outputs.events.slice(0, lastIndex)) + ')');
+                lastIndex -= 1;
+            }
+            if (this.persistBatch(this.outputs.events.slice(0, lastIndex))) {
+                //Clear event queue
+                this.outputs.events.splice(0, lastIndex);
+                this.storage.set(this.StorageKeys.EVENTS, this.outputs.events);
+            }
+        }
+    };
+
+    Client.prototype.persistBatch = function (eventBatch) {
+        this.logger.log(eventBatch.length + ' events in batch');
+        if (AMA.Util.getRequestBodySize(eventBatch) < 512000) {
+            var batchId = AMA.Util.GUID();
+            //Save batch so data is not lost.
+            this.outputs.batches[batchId] = eventBatch;
+            this.storage.set(this.StorageKeys.BATCHES, this.outputs.batches);
+            this.outputs.batchIndex.push(batchId);
+            this.storage.set(this.StorageKeys.BATCH_INDEX, this.outputs.batchIndex);
+            return true;
+        }
+        this.logger.error('Events too large');
+        return false;
+    };
+
     Client.prototype.submitAllBatches = function (options) {
         options.submitCallback = options.submitCallback || this.options.submitCallback;
         this.logger.log('[Function:(AMA.Client).submitAllBatches]' +
             (options ? '\noptions:' + JSON.stringify(options) : ''));
         var indices = [],
-            that = this;
+            that    = this;
         this.outputs.batchIndex.forEach(function (batchIndex) {
             options.batchId = batchIndex;
             options.clientContext = options.clientContext || that.options.clientContext;
-            that.submitBatchById(options);
-            indices.push(batchIndex);
+            if (!that.outputs.batchesInFlight[batchIndex]) {
+                indices.push(that.submitBatchById(options));
+            }
         });
         return indices;
     };
+
+    Client.NON_RETRYABLE_EXCEPTIONS = ['BadRequestException', 'SerializationException', 'ValidationException'];
+    Client.prototype.submitBatchById = function (options) {
+        if (typeof(options) !== 'object' || !options.batchId) {
+            this.logger.error('Invalid Options passed to submitBatchById');
+            return;
+        }
+        options.submitCallback = options.submitCallback || this.options.submitCallback;
+        this.logger.log('[Function:(AMA.Client).submitBatchById]' +
+            (options ? '\noptions:' + JSON.stringify(options) : ''));
+        var eventBatch = {
+            'events'       : this.outputs.batches[options.batchId],
+            'clientContext': JSON.stringify(options.clientContext || this.options.clientContext)
+        };
+        this.outputs.batchesInFlight[options.batchId] = AMA.Util.timestamp();
+        this.outputs.MobileAnalytics.putEvents(eventBatch,
+            this.handlePutEventsResponse(options.batchId, options.submitCallback));
+        return options.batchId;
+    };
+
+    Client.prototype.handlePutEventsResponse = function (batchId, callback) {
+        var self = this;
+        return function (err, data) {
+            var clearBatch = true,
+                wasThrottled = self.outputs.isThrottled;
+            if (err) {
+                self.logger.error(err, data);
+                if (err.statusCode === undefined || err.statusCode === 400) {
+                    if (Client.NON_RETRYABLE_EXCEPTIONS.indexOf(err.code) < 0) {
+                        clearBatch = false;
+                    }
+                    self.outputs.isThrottled = err.code === 'ThrottlingException';
+                    if (self.outputs.isThrottled) {
+                        self.logger.warn('Application is currently throttled');
+                    }
+                }
+            } else {
+                self.logger.info('Events Submitted Successfully');
+                self.outputs.isThrottled = false;
+            }
+            if (clearBatch) {
+                self.clearBatchById(batchId);
+            }
+            delete self.outputs.batchesInFlight[batchId];
+            callback(err, data, batchId);
+            if (wasThrottled && !self.outputs.isThrottled) {
+                self.logger.warn('Was throttled flushing remaining batches', callback);
+                self.submitAllBatches({
+                    submitCallback: callback
+                });
+            }
+        };
+    };
+
     Client.prototype.clearBatchById = function (batchId) {
         this.logger.log('[Function:(AMA.Client).clearBatchById]' +
             (batchId ? '\nbatchId:' + batchId : ''));
@@ -437,41 +559,15 @@ AMA.Client = (function () {
             this.outputs.batchIndex.splice(this.outputs.batchIndex.indexOf(batchId), 1);
 
             // Persist latest batches / events
-            AMA.Storage.set(this.StorageKeys.BATCH_INDEX, this.outputs.batchIndex);
-            AMA.Storage.set(this.StorageKeys.BATCHES, this.outputs.batches);
+            this.storage.set(this.StorageKeys.BATCH_INDEX, this.outputs.batchIndex);
+            this.storage.set(this.StorageKeys.BATCHES, this.outputs.batches);
         }
-    };
-
-    Client.NON_RETRYABLE_EXCEPTIONS = ['BadRequestException', 'SerializationException', 'ValidationException'];
-    Client.prototype.submitBatchById = function (options) {
-        options = options || {};
-        options.submitCallback = options.submitCallback || this.options.submitCallback;
-        this.logger.log('[Function:(AMA.Client).submitBatchById]' +
-            (options ? '\noptions:' + JSON.stringify(options) : ''));
-        var eventBatch = {
-            'events': this.outputs.batches[options.batchId],
-            'clientContext': JSON.stringify(options.clientContext || this.options.clientContext)
-        }, self = this;
-        this.outputs.MobileAnalytics.putEvents(eventBatch, function (err, data) {
-            var clearBatch = true;
-            options.submitCallback(err, data, options.batchId);
-            if (err) {
-                self.logger.error(err, data);
-                if ((err.statusCode === undefined || err.statusCode === 400) && Client.NON_RETRYABLE_EXCEPTIONS.indexOf(err.code) < 0) {
-                    clearBatch = false;
-                }
-            } else {
-                self.logger.info('Events Submitted Successfully');
-            }
-            if (clearBatch) {
-                self.clearBatchById(options.batchId);
-            }
-        });
     };
 
     return Client;
 }());
 module.exports = AMA.Client;
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./MobileAnalyticsUtilities.js":4,"./StorageClients/LocalStorage.js":5,"./StorageClients/StorageKeys.js":6}],2:[function(require,module,exports){
 (function (global){
@@ -536,15 +632,15 @@ AMA.Session = (function () {
             'SESSION_START_TIMESTAMP': AMA.StorageKeys.SESSION_START_TIMESTAMP + this.id
         };
         this.startTimestamp = this.options.startTime ||
-            AMA.Storage.get(this.StorageKeys.SESSION_START_TIMESTAMP) ||
+            this.options.storage.get(this.StorageKeys.SESSION_START_TIMESTAMP) ||
             new Date().toISOString();
-        this.expirationDate = parseInt(AMA.Storage.get(this.StorageKeys.SESSION_EXPIRATION), 10);
+        this.expirationDate = parseInt(this.options.storage.get(this.StorageKeys.SESSION_EXPIRATION), 10);
         if (isNaN(this.expirationDate)) {
             this.expirationDate = (new Date().getTime() + this.sessionLength);
         }
-        AMA.Storage.set(this.StorageKeys.SESSION_ID, this.id);
-        AMA.Storage.set(this.StorageKeys.SESSION_EXPIRATION, this.expirationDate);
-        AMA.Storage.set(this.StorageKeys.SESSION_START_TIMESTAMP, this.startTimestamp);
+        this.options.storage.set(this.StorageKeys.SESSION_ID, this.id);
+        this.options.storage.set(this.StorageKeys.SESSION_EXPIRATION, this.expirationDate);
+        this.options.storage.set(this.StorageKeys.SESSION_START_TIMESTAMP, this.startTimestamp);
         this.sessionTimeoutReference = setTimeout(this.expireSession.bind(this), this.sessionLength);
     };
 
@@ -572,9 +668,9 @@ AMA.Session = (function () {
     Session.prototype.clearSession = function () {
         this.logger.log('[Function:(Session).clearSession]');
         clearTimeout(this.sessionTimeoutReference);
-        AMA.Storage.delete(this.StorageKeys.SESSION_ID);
-        AMA.Storage.delete(this.StorageKeys.SESSION_EXPIRATION);
-        AMA.Storage.delete(this.StorageKeys.SESSION_START_TIMESTAMP);
+        this.options.storage.delete(this.StorageKeys.SESSION_ID);
+        this.options.storage.delete(this.StorageKeys.SESSION_EXPIRATION);
+        this.options.storage.delete(this.StorageKeys.SESSION_START_TIMESTAMP);
     };
 
 
@@ -618,7 +714,7 @@ AMA.Session = (function () {
         this.logger.log('[Function:(Session).setSessionTimeout]' +  (timeout ? '\ntimeout:' + timeout : ''));
         clearTimeout(this.sessionTimeoutReference);
         this.expirationDate = timeout;
-        AMA.Storage.set(this.StorageKeys.SESSION_EXPIRATION, this.expirationDate);
+        this.options.storage.set(this.StorageKeys.SESSION_EXPIRATION, this.expirationDate);
         this.sessionTimeoutReference = setTimeout(this.expireSession.bind(this),
             this.expirationDate - (new Date()).getTime());
     };
@@ -626,6 +722,7 @@ AMA.Session = (function () {
 }());
 
 module.exports = AMA.Session;
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./MobileAnalyticsUtilities.js":4,"./StorageClients/LocalStorage.js":5,"./StorageClients/StorageKeys.js":6}],3:[function(require,module,exports){
 (function (global){
@@ -666,18 +763,23 @@ AMA.Manager = (function () {
         if (options instanceof AMA.Client) {
             this.client = options;
         } else {
+            options._autoSubmitEvents = options.autoSubmitEvents;
+            options.autoSubmitEvents = false;
             this.client = new AMA.Client(options);
+            options.autoSubmitEvents = options._autoSubmitEvents !== false;
+            delete options._autoSubmitEvents;
         }
         this.options = this.client.options;
         this.outputs = this.client.outputs;
 
         this.options.expirationCallback = this.options.expirationCallback || AMA.Util.NOP;
         function checkForStoredSessions(context) {
-            AMA.Storage.each(function (key) {
+            context.client.storage.each(function (key) {
                 if (key.indexOf(AMA.StorageKeys.SESSION_ID) === 0) {
                     context.outputs.session = new AMA.Session({
-                        sessionId: AMA.Storage.get(key),
-                        sessionLength: context.options.sessionLength,
+                        storage           : context.client.storage,
+                        sessionId         : context.client.storage.get(key),
+                        sessionLength     : context.options.sessionLength,
                         expirationCallback: function (session) {
                             var shouldExtend = context.options.expirationCallback(session);
                             if (shouldExtend === true || typeof shouldExtend === 'number') {
@@ -698,7 +800,9 @@ AMA.Manager = (function () {
         if (!this.outputs.session) {
             this.startSession();
         }
-        this.client.submitEvents();
+        if (this.options.autoSubmitEvents) {
+            this.client.submitEvents();
+        }
     };
 
     /**
@@ -723,6 +827,7 @@ AMA.Manager = (function () {
             this.outputs.session.clearSession();
         }
         this.outputs.session = new AMA.Session({
+            storage: this.client.storage,
             logger: this.client.options.logger,
             sessionLength: this.options.sessionLength,
             expirationCallback: function (session) {
@@ -808,6 +913,7 @@ AMA.Manager = (function () {
 }());
 
 module.exports = AMA.Manager;
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./MobileAnalyticsClient.js":1,"./MobileAnalyticsSession.js":2,"./StorageClients/LocalStorage.js":5,"./StorageClients/StorageKeys.js":6}],4:[function(require,module,exports){
 (function (global){
@@ -821,8 +927,6 @@ module.exports = AMA.Manager;
 */
 
 var AMA = global.AMA;
-AMA.Storage = require('./StorageClients/LocalStorage.js');
-AMA.StorageKeys = require('./StorageClients/StorageKeys.js');
 
 AMA.Util = (function () {
     'use strict';
@@ -852,12 +956,6 @@ AMA.Util = (function () {
     function guid() {
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
-    function getClientId() {
-        if (AMA.Storage.get(AMA.StorageKeys.CLIENT_ID) === undefined) {
-            AMA.Storage.set(AMA.StorageKeys.CLIENT_ID, guid());
-        }
-        return AMA.Storage.get(AMA.StorageKeys.CLIENT_ID);
-    }
     function mergeObjects(override, initial) {
         Object.keys(initial).forEach(function (key) {
             if (initial.hasOwnProperty(key)) {
@@ -867,24 +965,29 @@ AMA.Util = (function () {
         return override;
     }
     function copy(original, extension) {
-        return mergeObjects(JSON.parse(JSON.stringify(original)), extension);
+        return mergeObjects(JSON.parse(JSON.stringify(original)), extension || {});
     }
     function NOP() {
         return undefined;
     }
+
+    function timestamp() {
+        return new Date().getTime();
+    }
     return {
         copy: copy,
         GUID: guid,
-        GetClientId: getClientId,
         getRequestBodySize: utf8ByteLength,
         mergeObjects: mergeObjects,
-        NOP: NOP
+        NOP: NOP,
+        timestamp: timestamp
     };
 }());
 
 module.exports = AMA.Util;
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./StorageClients/LocalStorage.js":5,"./StorageClients/StorageKeys.js":6}],5:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (global){
 /*
   Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -900,105 +1003,121 @@ AMA.Util = require('../MobileAnalyticsUtilities.js');
 
 AMA.Storage = (function () {
     'use strict';
-    var storageKey = 'AWSMobileAnalyticsStorage',
-        cache = {},
-        logger;
+    var LocalStorageClient = function (appId) {
+        this.storageKey = 'AWSMobileAnalyticsStorage-' + appId;
+        global[this.storageKey] = global[this.storageKey] || {};
+        this.cache = global[this.storageKey];
+        this.cache.id = this.cache.id || AMA.Util.GUID();
+        this.logger = {
+            log: AMA.Util.NOP,
+            info: AMA.Util.NOP,
+            warn: AMA.Util.NOP,
+            error: AMA.Util.NOP
+        };
+        this.reload();
+    };
+    // Safari, in Private Browsing Mode, looks like it supports localStorage but all calls to setItem
+    // throw QuotaExceededError. We're going to detect this and just silently drop any calls to setItem
+    // to avoid the entire page breaking, without having to do a check at each usage of Storage.
+    /*global Storage*/
+    if (typeof localStorage === 'object' && Storage === 'object') {
+        try {
+            localStorage.setItem('TestLocalStorage', 1);
+            localStorage.removeItem('TestLocalStorage');
+        } catch (e) {
+            Storage.prototype._setItem = Storage.prototype.setItem;
+            Storage.prototype.setItem = AMA.Util.NOP;
+            console.warn('Your web browser does not support storing settings locally. In Safari, the most common cause of this is using "Private Browsing Mode". Some settings may not save or some features may not work properly for you.');
+        }
+    }
 
-    function supportsLocalStorage() {
+    LocalStorageClient.prototype.type = 'LOCAL_STORAGE';
+    LocalStorageClient.prototype.get = function (key) {
+        return this.cache[key];
+    };
+    LocalStorageClient.prototype.set = function (key, value) {
+        this.cache[key] = value;
+        return this.saveToLocalStorage();
+    };
+    LocalStorageClient.prototype.delete = function (key) {
+        delete this.cache[key];
+        this.saveToLocalStorage();
+    };
+    LocalStorageClient.prototype.each = function (callback) {
+        var key;
+        for (key in this.cache) {
+            if (this.cache.hasOwnProperty(key)) {
+                callback(key, this.cache[key]);
+            }
+        }
+    };
+    LocalStorageClient.prototype.saveToLocalStorage = function saveToLocalStorage() {
+        if (this.supportsLocalStorage()) {
+            try {
+                this.logger.log('[Function:(AWS.MobileAnalyticsClient.Storage).saveToLocalStorage]');
+                window.localStorage.setItem(this.storageKey, JSON.stringify(this.cache));
+                this.logger.log('LocalStorage Cache: ' + JSON.stringify(this.cache));
+            } catch (saveToLocalStorageError) {
+                this.logger.log('Error saving to LocalStorage: ' + JSON.stringify(saveToLocalStorageError));
+            }
+        } else {
+            this.logger.log('LocalStorage is not available');
+        }
+    };
+    LocalStorageClient.prototype.reload = function loadLocalStorage() {
+        if (this.supportsLocalStorage()) {
+            var storedCache;
+            try {
+                this.logger.log('[Function:(AWS.MobileAnalyticsClient.Storage).loadLocalStorage]');
+                storedCache = window.localStorage.getItem(this.storageKey);
+                this.logger.log('LocalStorage Cache: ' + storedCache);
+                if (storedCache) {
+                    //Try to parse, if corrupt delete
+                    try {
+                        this.cache = JSON.parse(storedCache);
+                    } catch (parseJSONError) {
+                        //Corrupted stored cache, delete it
+                        this.clearLocalStorage();
+                    }
+                }
+            } catch (loadLocalStorageError) {
+                this.logger.log('Error loading LocalStorage: ' + JSON.stringify(loadLocalStorageError));
+                this.clearLocalStorage();
+            }
+        } else {
+            this.logger.log('LocalStorage is not available');
+        }
+    };
+    LocalStorageClient.prototype.setLogger =  function (logFunction) {
+        this.logger = logFunction;
+    };
+    LocalStorageClient.prototype.supportsLocalStorage = function supportsLocalStorage() {
         try {
             return window && window.localStorage;
         } catch (supportsLocalStorageError) {
             return false;
         }
-    }
-
-    function clearLocalStorage() {
-        cache = {};
-        if (supportsLocalStorage()) {
-            try {
-                if (logger) { logger.log('[Function:(AWS.MobileAnalyticsClient.Storage).clearLocalStorage]'); }
-                window.localStorage.removeItem(storageKey);
-            } catch (clearLocalStorageError) {
-                console.log('Error clearing LocalStorage: ' + JSON.stringify(clearLocalStorageError));
-            }
-        } else {
-            console.log('LocalStorage is not available');
-        }
-    }
-
-    function loadLocalStorage() {
-        if (supportsLocalStorage()) {
-            var storedCache;
-            try {
-                if (logger) { logger.log('[Function:(AWS.MobileAnalyticsClient.Storage).loadLocalStorage]'); }
-                storedCache = window.localStorage.getItem(storageKey);
-                if (logger) { logger.log('LocalStorage Cache: ' + storedCache); }
-                if (storedCache) {
-                    //Try to parse, if corrupt delete
-                    try {
-                        cache = JSON.parse(storedCache);
-                    } catch (parseJSONError) {
-                        //Corrupted stored cache, delete it
-                        clearLocalStorage();
-                    }
-                }
-            } catch (loadLocalStorageError) {
-                console.log('Error loading LocalStorage: ' + JSON.stringify(loadLocalStorageError));
-                clearLocalStorage();
-            }
-        } else {
-            console.log('LocalStorage is not available');
-        }
-    }
-
-    function saveToLocalStorage() {
-        if (supportsLocalStorage()) {
-            try {
-                if (logger) { logger.log('[Function:(AWS.MobileAnalyticsClient.Storage).saveToLocalStorage]'); }
-                window.localStorage.setItem(storageKey, JSON.stringify(cache));
-                if (logger) { logger.log('LocalStorage Cache: ' + JSON.stringify(cache)); }
-            } catch (saveToLocalStorageError) {
-                console.log('Error saving to LocalStorage: ' + JSON.stringify(saveToLocalStorageError));
-            }
-        } else {
-            console.log('LocalStorage is not available');
-        }
-    }
-
-    loadLocalStorage();
-
-    return {
-        type: 'LOCAL_STORAGE',
-        id: AMA.Util.GUID(),
-        get: function (key) {
-            return cache[key];
-        },
-        set: function (key, value) {
-            cache[key] = value;
-            saveToLocalStorage();
-        },
-        delete: function (key) {
-            delete cache[key];
-            saveToLocalStorage();
-        },
-        each: function (callback) {
-            var key;
-            for (key in cache) {
-                if (cache.hasOwnProperty(key)) {
-                    callback(key, cache[key]);
-                }
-            }
-        },
-        reload: loadLocalStorage,
-        setLogger: function (logFunction) {
-            logger = logFunction;
-        },
-        supportsLocalStorage: supportsLocalStorage,
-        clearLocalStorage: clearLocalStorage
     };
+    LocalStorageClient.prototype.clearLocalStorage = function clearLocalStorage() {
+        this.cache = {};
+        if (this.supportsLocalStorage()) {
+            try {
+                this.logger.log('[Function:(AWS.MobileAnalyticsClient.Storage).clearLocalStorage]');
+                window.localStorage.removeItem(this.storageKey);
+                //Clear Cache
+                global[this.storageKey] = {};
+            } catch (clearLocalStorageError) {
+                this.logger.log('Error clearing LocalStorage: ' + JSON.stringify(clearLocalStorageError));
+            }
+        } else {
+            this.logger.log('LocalStorage is not available');
+        }
+    };
+    return LocalStorageClient;
 }());
 
 module.exports = AMA.Storage;
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../MobileAnalyticsUtilities.js":4}],6:[function(require,module,exports){
 (function (global){
@@ -1023,6 +1142,7 @@ AMA.StorageKeys = {
 };
 
 module.exports = AMA.StorageKeys;
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],7:[function(require,module,exports){
 (function (global){
@@ -1050,5 +1170,6 @@ require('./StorageClients/LocalStorage.js');
 require('./MobileAnalyticsSession.js');
 require('./MobileAnalyticsSessionManager.js');
 module.exports = global.AMA;
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./MobileAnalyticsClient.js":1,"./MobileAnalyticsSession.js":2,"./MobileAnalyticsSessionManager.js":3,"./MobileAnalyticsUtilities.js":4,"./StorageClients/LocalStorage.js":5,"./StorageClients/StorageKeys.js":6}]},{},[7]);

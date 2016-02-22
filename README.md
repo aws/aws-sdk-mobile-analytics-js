@@ -111,13 +111,13 @@ Additional app and environment details can be added to the "options" object when
 <pre class="prettyprint">
     var options = {
         appId : MOBILE_ANALYTICS_APP_ID,       //Required e.g. 'c5d69c75a92646b8953126437d92c007'
-        platform : DEVICE_PLATFORM,            //Required valid values: 'Android', 'iPhoneOS', 'WindowsPhone', 'Blackberry', 'Windows', 'MacOS', 'Linux'
         appTitle : APP_TITLE,                  //Optional e.g. 'Example App'
         appVersionName : APP_VERSION_NAME,     //Optional e.g. '1.4.1'
         appVersionCode : APP_VERSION_CODE,     //Optional e.g. '42'
         appPackageName : APP_PACKAGE_NAME,     //Optional e.g. 'com.amazon.example'
         make : DEVICE_MAKE,                    //Optional e.g. 'Amazon'
         model : DEVICE_MODEL,                  //Optional e.g. 'KFTT'
+        platform : DEVICE_PLATFORM,            //Optional valid values: 'Android', 'iPhoneOS'
         platformVersion : DEVICE_PLATFORM_VER  //Optional e.g. '4.4'
     };
     mobileAnalyticsClient = new AMA.Manager(options);
@@ -134,11 +134,23 @@ https://aws.github.io/aws-sdk-mobile-analytics-js/doc/AMA.Manager.html
 The Amazon Mobile Analytics JavaScript SDK will make requests to the following endpoints
 * For Event Submission: "https://mobileanalytics.us-east-1.amazonaws.com"
 * For Cognito Authentication: "https://cognito-identity.us-east-1.amazonaws.com"
-** This endpoint may change based on which region your Identity Pool was created in.
+  * This endpoint may change based on which region your Identity Pool was created in.
  
 For most frameworks you can whitelist both domains by whitelisting all AWS endpoints with "*.amazonaws.com".
 
 ## Change Log
+**v0.9.1:**
+* Updated Dependency: aws-sdk-js v2.2.37
+* Increase base delay between retries from 30ms to 3s
+* Allow passing of configurations to the low level client via clientOptions attribute
+* Local events from different apps are stored in different locations
+* Improved retry strategies
+* CorrectClockSkew is enabled by default for Sigv4 Signatures [per Issue#7](https://github.com/aws/aws-sdk-mobile-analytics-js/issues/7)
+* Bug Fixes:
+  * Fixed timer from being killed in cases where multiple submissions happened in under a second
+  * Fixed duplicate batch re-submission to the Mobile Analytics service
+  * Fixed delayed auto-submission of first _session.start event
+  * Fixed Safari throwing exception when in private browsing mode
 
 **v0.9.0:**
 * Initial release. Developer preview.

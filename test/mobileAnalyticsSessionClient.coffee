@@ -9,12 +9,24 @@
 
 helpers = require('./helpers')
 AWS = helpers.AWS
+AWS.VERSION = 'AWS_VERSION'
 AMA = helpers.AMA
 mobileAnalyticsClient = null
 lastLog = null
 lastError = null
+lastWarn = null
 lastClientContext = null
 monetizationEvent = null
+m1 = null
+m2 = null
+m1_2 = null
+batchIds = null
+submissions = 0
+expectedSubmissions = 0
+countSubmissionCallback = (err, results) ->
+  if (!err)
+    console.log(submissions++, err, results)
+#  expect(submissions).to.eql(expectedSubmissions)
 
 logMessage = (message) ->
   lastLog = arguments
@@ -23,6 +35,10 @@ logMessage = (message) ->
 errorMessage = (message) ->
   lastError = arguments
   #console.error(JSON.stringify(message))
+
+warnMessage = (message) ->
+  lastWarn = arguments
+#  console.log(JSON.stringify(message))
 
 clientConfig = {
   appTitle : 'appTitle',
@@ -40,10 +56,13 @@ clientConfig = {
   },
   logger: {
     log: logMessage
-    error: errorMessage
+    error: errorMessage,
+    warn: warnMessage,
+    info: logMessage
   }
 }
-
+s = new AMA.Storage('appId')
+s.clearLocalStorage()
 
 createErrorResponse = (code, message) ->
   message = message || ''
@@ -80,19 +99,19 @@ testBatchNotDeleted = (errorType) ->
       expect(mobileAnalyticsClient.outputs.batchIndex.indexOf(indices[0])).to.eql(0)
     it 'should not delete the batch', ->
       mobileAnalyticsClient.recordEvent('should not delete batchIndex other ' + errorType, {testAttribute: 'invalid'}, {testMetric: 100})
-      indices=mobileAnalyticsClient.submitEvents()
+      indices = mobileAnalyticsClient.submitEvents()
       expect(indices.length).to.eql(2)
       expect(mobileAnalyticsClient.outputs.batches[indices[0]]).not.to.be.undefined
     it 'should not delete the batch index from storage', ->
       mobileAnalyticsClient.recordEvent('should not delete batchIndex other ' + errorType, {testAttribute: 'invalid'}, {testMetric: 100})
-      indices=mobileAnalyticsClient.submitEvents()
+      indices = mobileAnalyticsClient.submitEvents()
       expect(indices.length).to.eql(3)
-      expect(AMA.Storage.get(mobileAnalyticsClient.StorageKeys.BATCH_INDEX).indexOf(indices[0])).to.eql(0)
+      expect(mobileAnalyticsClient.storage.get(mobileAnalyticsClient.StorageKeys.BATCH_INDEX).indexOf(indices[0])).to.eql(0)
     it 'should not delete the batch from storage', ->
       mobileAnalyticsClient.recordEvent('should not delete batchIndex other ' + errorType, {testAttribute: 'invalid'}, {testMetric: 100})
-      indices=mobileAnalyticsClient.submitEvents()
+      indices = mobileAnalyticsClient.submitEvents()
       expect(indices.length).to.eql(4)
-      expect(AMA.Storage.get(mobileAnalyticsClient.StorageKeys.BATCHES)[indices[0]]).not.to.be.undefined
+      expect(mobileAnalyticsClient.storage.get(mobileAnalyticsClient.StorageKeys.BATCHES)[indices[0]]).not.to.be.undefined
       
 
 testBatchDeleted = (errorType) ->
@@ -115,12 +134,12 @@ testBatchDeleted = (errorType) ->
       mobileAnalyticsClient.recordEvent('should delete index storage ' + errorType, {testAttribute: 'invalid'}, {testMetric: 100})
       indices=mobileAnalyticsClient.submitEvents()
       expect(indices.length).to.eql(1)
-      expect(AMA.Storage.get(mobileAnalyticsClient.StorageKeys.BATCH_INDEX).indexOf(indices[0])).to.eql(-1)
+      expect(mobileAnalyticsClient.storage.get(mobileAnalyticsClient.StorageKeys.BATCH_INDEX).indexOf(indices[0])).to.eql(-1)
     it 'should delete the batch from storage', ->
       mobileAnalyticsClient.recordEvent('should delete batch storage ' + errorType, {testAttribute: 'invalid'}, {testMetric: 100})
       indices=mobileAnalyticsClient.submitEvents()
       expect(indices.length).to.eql(1)
-      expect(AMA.Storage.get(mobileAnalyticsClient.StorageKeys.BATCHES)[indices[0]]).to.be.undefined
+      expect(mobileAnalyticsClient.storage.get(mobileAnalyticsClient.StorageKeys.BATCHES)[indices[0]]).to.be.undefined
   
   
 describe 'AMA.Manager', ->
@@ -147,10 +166,12 @@ describe 'AMA.Manager', ->
       mobileAnalyticsClient = new AMA.Manager(clientConfig)
       currentError = null
       mobileAnalyticsClient.submitEvents()
-      mobileAnalyticsClient.renewSession();
+      mobileAnalyticsClient.renewSession()
     it 'should increase event count', ->
 #      expect(mobileAnalyticsClient.outputs.events.length).to.eql(2)
     it 'should have a new session id', ->
+      expect(mobileAnalyticsClient.outputs.events[0].eventType).to.eql('_session.stop')
+      expect(mobileAnalyticsClient.outputs.events[1].eventType).to.eql('_session.start')
       expect(mobileAnalyticsClient.outputs.events[0].session.id).not.to.eql(mobileAnalyticsClient.outputs.events[1].session.id)
   describe 'Client Context Values', ->
     before ->
@@ -180,7 +201,7 @@ describe 'AMA.Manager', ->
     it 'should have sdk', ->
       expect(lastClientContext.services.mobile_analytics.sdk_name).to.eql('aws-sdk-mobile-analytics-js')
     it 'should have sdk version', ->
-      expect(lastClientContext.services.mobile_analytics.sdk_version).to.eql('0.9.0')
+      expect(lastClientContext.services.mobile_analytics.sdk_version).to.eql('0.9.1:AWS_VERSION')
   describe 'Record Monetization Event (Currency Specified)', ->
     before ->
       #Clear Events
@@ -301,8 +322,8 @@ describe 'AMA.Manager', ->
     batchSet4 = []
     beforeEach ->
       mobileAnalyticsClient = new AMA.Client(clientConfig)
-      AMA.Storage.delete(mobileAnalyticsClient.StorageKeys.BATCHES)
-      AMA.Storage.delete(mobileAnalyticsClient.StorageKeys.BATCH_INDEX)
+      mobileAnalyticsClient.storage.delete(mobileAnalyticsClient.StorageKeys.BATCHES)
+      mobileAnalyticsClient.storage.delete(mobileAnalyticsClient.StorageKeys.BATCH_INDEX)
       mobileAnalyticsClient = new AMA.Client(clientConfig)
       currentError = createErrorResponse('OtherException')
       mobileAnalyticsClient.outputs.lastSubmitTimestamp = 0
@@ -325,8 +346,8 @@ describe 'AMA.Manager', ->
       expect(mobileAnalyticsClient.outputs.batchIndex.length).to.eql(4)
       expect(Object.keys(mobileAnalyticsClient.outputs.batches).length).to.eql(4)
     it 'should persist 4 batches', ->
-      expect(AMA.Storage.get(mobileAnalyticsClient.StorageKeys.BATCH_INDEX).length).to.eql(4)
-      expect(Object.keys(AMA.Storage.get(mobileAnalyticsClient.StorageKeys.BATCHES)).length).to.eql(4)
+      expect(mobileAnalyticsClient.storage.get(mobileAnalyticsClient.StorageKeys.BATCH_INDEX).length).to.eql(4)
+      expect(Object.keys(mobileAnalyticsClient.storage.get(mobileAnalyticsClient.StorageKeys.BATCHES)).length).to.eql(4)
     it 'should have batches in same order as submissions', ->
       expect(mobileAnalyticsClient.outputs.batchIndex[0]).to.eql(batchSet1[0])
       expect(mobileAnalyticsClient.outputs.batchIndex[1]).to.eql(batchSet2[1])
@@ -338,3 +359,67 @@ describe 'AMA.Manager', ->
         console.log(JSON.stringify(batch))
         expect(parseInt(batch[0].eventType.replace('orderEvent', ''))).to.be.below(parseInt(batch[1].eventType.replace('orderEvent', '')))
       checkBatch batchId for batchId in mobileAnalyticsClient.outputs.batchIndex
+
+  describe 'Multiple SDK Instances', ->
+    before ->
+      s1 = new AMA.Storage('id1')
+      s1.clearLocalStorage()
+      s2 = new AMA.Storage('id2')
+      s2.clearLocalStorage()
+      m1 = new AMA.Manager(AMA.Util.copy({appId: 'id1'}, clientConfig))
+      m2 = new AMA.Manager(AMA.Util.copy({appId: 'id2'}, clientConfig))
+      m1_2 = new AMA.Manager(AMA.Util.copy({appId: 'id1'}, clientConfig))
+      m1.recordEvent('m1event1')
+      m1.recordEvent('m1event2')
+      m2.recordEvent('m2event1')
+    it 'm1 should have only m1 events', ->
+      expect(m1.client.storage.cache.AWSMobileAnalyticsEventStorage.length).to.eql(2);
+      expect(m1.client.storage.cache.AWSMobileAnalyticsEventStorage[0].eventType).to.eql('m1event1');
+      expect(m1.client.storage.cache.AWSMobileAnalyticsEventStorage[1].eventType).to.eql('m1event2');
+    it 'm2 should have only m2 event', ->
+      expect(m2.client.storage.cache.AWSMobileAnalyticsEventStorage.length).to.eql(1);
+      expect(m2.client.storage.cache.AWSMobileAnalyticsEventStorage[0].eventType).to.eql('m2event1');
+    it 'm1_2 should have same client id as m1', ->
+      expect(m1.client.options.clientContext.client.client_id).to.eql(m1_2.client.options.clientContext.client.client_id)
+  describe 'Throttling Interval Backoff', ->
+    before ->
+      s1 = new AMA.Storage('throttlingId')
+      s1.clearLocalStorage()
+      m1 = new AMA.Manager(AMA.Util.copy({
+        appId: 'throttlingId',
+        autoSubmitEvents: false
+      }, clientConfig))
+      currentError = createErrorResponse('OtherException')
+      m1.outputs.lastSubmitTimestamp = 0
+      lastWarn = undefined
+      lastLog = undefined
+      batchIds = m1.submitEvents()
+      currentError = createErrorResponse('ThrottlingException')
+      m1.recordEvent('custom_event')
+      m1.outputs.lastSubmitTimestamp = 0
+      lastWarn = undefined
+      lastLog = undefined
+      m1.submitEvents()
+      expect(m1.outputs.isThrottled).to.eql(true);
+      Math._random = Math.random
+      Math.random = () -> 1
+    after ->
+      Math.random = Math._random
+    it 'm1 should not submit if at 30s', ->
+      m1.outputs.lastSubmitTimestamp = (new Date()).getTime() - (30 * 1000)
+      expect(m1.outputs.isThrottled).to.eql(true);
+      expect(Object.keys(m1.outputs.batchesInFlight).length).to.eql(0);
+      expect(Object.keys(m1.outputs.batches).length).to.eql(2);
+      tmp = m1.submitEvents()
+      expect(tmp).to.eql([]);
+    it 'm1 should submit if at 60s', ->
+      m1.outputs.lastSubmitTimestamp = (new Date()).getTime() - (60 * 1001)
+      currentError = null
+      expect(m1.outputs.isThrottled).to.eql(true);
+      expect(Object.keys(m1.outputs.batchesInFlight).length).to.eql(0);
+      expect(Object.keys(m1.outputs.batches).length).to.eql(2);
+      phoneHomeBatch = m1.submitEvents({submitCallback: countSubmissionCallback})
+      console.log(lastWarn)
+      expect(phoneHomeBatch.length).to.eql(1);
+      expect(phoneHomeBatch).to.eql([batchIds[0]]);
+      expect(submissions).to.eql(2)

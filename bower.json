@@ -1,6 +1,6 @@
 {
     "name": "aws-sdk-mobile-analytics",
-    "version": "0.9.0",
+    "version": "0.9.1",
     "main": "dist/aws-sdk-mobile-analytics.min.js",
     "ignore": [
         "lib",
@@ -10,7 +10,7 @@
         "package.json"
     ],
     "dependencies": {
-        "aws-sdk-js": ">=2.1.18"
+        "aws-sdk-js": ">=2.2.37"
     },
     "devDependencies": {
     }

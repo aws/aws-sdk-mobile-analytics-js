@@ -12,17 +12,26 @@ AWS = helpers.AWS
 AMA = helpers.AMA
 
 describe 'AMA.Storage (In Memory)', ->
+  storage = new AMA.Storage('MyAppId')
   it 'should set ascii', ->
-    AMA.Storage.set('_test123', '_test123')
-    expect(AMA.Storage.get('_test123')).to.equal('_test123')
+    storage.set('_test123', '_test123')
+    expect(storage.get('_test123')).to.equal('_test123')
   it 'should delete stored ascii', ->
-    AMA.Storage.delete('_test123')
-    expect(AMA.Storage.get('_test123')).to.equal()
+    storage.delete('_test123')
+    expect(storage.get('_test123')).to.equal()
     
 describe 'AMA.Storage (LocalStorage)', ->
+  storage = new AMA.Storage('MyAppId')
   it 'should set ascii', ->
-    AMA.Storage.set('_test123', '_test123')
-    expect(AMA.Storage.get('_test123')).to.equal('_test123')
+    storage.set('_test123', '_test123')
+    expect(storage.get('_test123')).to.equal('_test123')
   it 'should delete stored ascii', ->
-    AMA.Storage.delete('_test123')
-    expect(AMA.Storage.get('_test123')).to.equal()
+    storage.delete('_test123')
+    expect(storage.get('_test123')).to.equal()
+    
+describe 'AMA.Storage cache singleton', ->
+  it 'should be same cache instance', ->
+    s1 = new AMA.Storage('MyAppId')
+    s2 = new AMA.Storage('MyAppId')
+    expect(s1.cache.id).to.eql(s2.cache.id)
+    

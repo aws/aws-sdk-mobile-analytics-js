@@ -10,7 +10,6 @@
 helpers = require('./helpers')
 AWS = helpers.AWS
 AMA = helpers.AMA
-clientId = AMA.Util.GetClientId()
 a =
 b =
 describe 'AMA.Util', ->
@@ -25,12 +24,6 @@ describe 'AMA.Util', ->
       expect(AMA.Util.mergeObjects(a, b)).to.eql({a:1, b:2, c:3})
     it 'should mutate original', ->
       expect(AMA.Util.mergeObjects(a, b)).to.equal(a)
-  describe 'clientId', ->
-    it 'should be persisted', ->
-      expect(AMA.Util.GetClientId()).to.eql(clientId)
-    it 'should be reset', ->
-      AMA.Storage.set(AMA.StorageKeys.CLIENT_ID, undefined)
-      expect(AMA.Util.GetClientId()).to.not.eql(clientId)
   describe 'utf8ByteLength', ->
     it 'should test char codes > 127', ->
       expect(AMA.Util.getRequestBodySize('©‰')).to.eql(5)

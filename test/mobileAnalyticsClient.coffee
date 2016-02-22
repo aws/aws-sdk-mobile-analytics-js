@@ -73,6 +73,9 @@ describe 'AMA.Client', ->
       expect(mobileAnalyticsClient).not.to.be.undefined
     it 'should be an instance of AMA.Client', ->
       expect(mobileAnalyticsClient).to.be.an.instanceOf(AMA.Client)
+    it 'should have a not null client id', ->
+      expect(mobileAnalyticsClient.options.clientContext.client.client_id).not.to.be.null
+      expect(mobileAnalyticsClient.options.clientContext.client.client_id).not.to.be.undefined
   describe 'Initialize Client with incorrect parameters', ->
     it 'should throw no appId error', ->
       mobileAnalyticsClient = new AMA.Client(emptyAppIDClientConfig)
@@ -102,10 +105,10 @@ describe 'AMA.Client', ->
         expect(mobileAnalyticsClient.options.autoSubmitEvents).to.be.false
   describe 'Clear a batch', ->
     before ->
-      mobileAnalyticsClient = new AMA.Manager(clientConfig)
+      mobileAnalyticsClient = new AMA.Client(clientConfig)
       mobileAnalyticsClient.outputs.batchIndex.push('clearABatch')
       mobileAnalyticsClient.outputs.batches['clearABatch'] = 'test'
-      mobileAnalyticsClient.client.clearBatchById('clearABatch')
+      mobileAnalyticsClient.clearBatchById('clearABatch')
     it 'should clear batch', ->
       expect(mobileAnalyticsClient.outputs.batches['clearABatch']).to.be.undefined
     it 'should clear batchIndex', ->
