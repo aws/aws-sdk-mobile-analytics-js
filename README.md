@@ -139,6 +139,10 @@ The Amazon Mobile Analytics JavaScript SDK will make requests to the following e
 For most frameworks you can whitelist both domains by whitelisting all AWS endpoints with "*.amazonaws.com".
 
 ## Change Log
+**v0.9.2:**
+* Bug Fixes:
+    * Fixed data loss issue on migration from previous versions
+
 **v0.9.1:**
 * Updated Dependency: aws-sdk-js v2.2.37
 * Increase base delay between retries from 30ms to 3s

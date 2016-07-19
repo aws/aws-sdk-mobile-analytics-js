@@ -8,7 +8,6 @@
 ###
 
 helpers = require('./helpers')
-AWS = helpers.AWS
 AMA = helpers.AMA
 lastError = null
 lastLog = null
@@ -102,7 +101,7 @@ describe 'AMA.Client', ->
     it 'should have correct platform', ->
       expect(mobileAnalyticsClient.options.platform).to.eql('ios')
     it 'should have autoSubmit set to false', ->
-        expect(mobileAnalyticsClient.options.autoSubmitEvents).to.be.false
+      expect(mobileAnalyticsClient.options.autoSubmitEvents).to.be.false
   describe 'Clear a batch', ->
     before ->
       mobileAnalyticsClient = new AMA.Client(clientConfig)

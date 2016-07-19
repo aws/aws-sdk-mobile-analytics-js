@@ -201,7 +201,7 @@ describe 'AMA.Manager', ->
     it 'should have sdk', ->
       expect(lastClientContext.services.mobile_analytics.sdk_name).to.eql('aws-sdk-mobile-analytics-js')
     it 'should have sdk version', ->
-      expect(lastClientContext.services.mobile_analytics.sdk_version).to.eql('0.9.1:AWS_VERSION')
+      expect(lastClientContext.services.mobile_analytics.sdk_version).to.eql('0.9.2:AWS_VERSION')
   describe 'Record Monetization Event (Currency Specified)', ->
     before ->
       #Clear Events
