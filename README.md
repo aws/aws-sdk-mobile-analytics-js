@@ -1,6 +1,14 @@
 # Amazon Mobile Analytics SDK for JavaScript
 
-**Developer Preview:** We welcome developer feedback on this project. You can reach us by creating an issue on the 
+##*Upgrade Notice*
+
+Customers should not upgrade from earlier versions of the Amazon Mobile Analytics SDK for JavaScript to version 0.9.1 due to an issue with device identification.  This upgrade path will cause existing devices to be identified as new devices after the upgrade.
+
+Users of earlier versions of the Amazon Mobile Analytics SDK for JavaScript should upgrade to version 0.9.2 and skip version 0.9.1.
+
+See: https://github.com/aws/aws-sdk-mobile-analytics-js/issues/15
+
+**Developer Preview:** We welcome developer feedback on this project. You can reach us by creating an issue on the
 GitHub repository or posting to the Amazon Mobile Analytics forums:
 * https://github.com/aws/aws-sdk-mobile-analytics-js
 * https://forums.aws.amazon.com/forum.jspa?forumID=174
@@ -72,7 +80,7 @@ By default a session lasts 10 minutes. You can override this default setting whe
 
 <pre class="prettyprint">
     var options = {
-        appId : MOBILE_ANALYTICS_APP_ID, 
+        appId : MOBILE_ANALYTICS_APP_ID,
         sessionLength: 300000            //Session Length in milliseconds.  This will evaluate to 5min.
     };
     mobileAnalyticsClient = new AMA.Manager(options);
@@ -82,10 +90,10 @@ A session's timeout can also be updated to allow for continuation of a session.
 
 <pre class="prettyprint">
     //This will set the current session to expire in 5 seconds from now.
-    mobileAnalyticsClient.resetSessionTimeout(5000); 
-    
-    //This will reset the current session's expiration time using the time specified during initialization. 
-    //If the default setting was used (10 minutes) then the session will expire 10 minutes from now. 
+    mobileAnalyticsClient.resetSessionTimeout(5000);
+
+    //This will reset the current session's expiration time using the time specified during initialization.
+    //If the default setting was used (10 minutes) then the session will expire 10 minutes from now.
     mobileAnalyticsClient.resetSessionTimeout();
 </pre>
 
@@ -99,8 +107,8 @@ You can record monetization events to enable reports such as Average Revenue Per
             price : PRICE,            //Required e.g. 1.99
             quantity : QUANTITY,      //Required e.g. 1
             currency : CURRENCY_CODE  //Optional ISO currency code e.g. 'USD'
-        }, 
-        {/* Custom Attributes */}, 
+        },
+        {/* Custom Attributes */},
         {/* Custom Metrics */}
     );
 </pre>
@@ -123,7 +131,7 @@ Additional app and environment details can be added to the "options" object when
     mobileAnalyticsClient = new AMA.Manager(options);
 </pre>
 
-Please note, if device details are not specified Amazon Mobile Analytics will make best efforts to determine these values based on the User-Agent header value. It is always better to specify these values during initialization if they are available. 
+Please note, if device details are not specified Amazon Mobile Analytics will make best efforts to determine these values based on the User-Agent header value. It is always better to specify these values during initialization if they are available.
 
 ### Further Documentation
 Further documentation and advanced configurations can be found here:
@@ -135,7 +143,7 @@ The Amazon Mobile Analytics JavaScript SDK will make requests to the following e
 * For Event Submission: "https://mobileanalytics.us-east-1.amazonaws.com"
 * For Cognito Authentication: "https://cognito-identity.us-east-1.amazonaws.com"
   * This endpoint may change based on which region your Identity Pool was created in.
- 
+
 For most frameworks you can whitelist both domains by whitelisting all AWS endpoints with "*.amazonaws.com".
 
 ## Change Log
