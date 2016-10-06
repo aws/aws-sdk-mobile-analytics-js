@@ -1,13 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global){
-/*
-  Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
-  the License. A copy of the License is located at http://aws.amazon.com/apache2.0/
-  or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
-  and limitations under the License.
-*/
+
 var AMA = global.AMA;
 AMA.Storage = require('./StorageClients/LocalStorage.js');
 AMA.StorageKeys = require('./StorageClients/StorageKeys.js');
@@ -177,9 +170,32 @@ AMA.Client = (function () {
                 this.storage.get(AMA.StorageKeys.GLOBAL_METRICS) || {})
         );
 
+        var v091ClientId = this.storage.get(AMA.StorageKeys.CLIENT_ID);
+        try {
+            if (window && window.localStorage) {
+                var v090Storage = window.localStorage.getItem('AWSMobileAnalyticsStorage');
+                if (v090Storage) {
+                    try {
+                        v090Storage = JSON.parse(v090Storage);
+                        var v090ClientId = v090Storage.AWSMobileAnalyticsClientId;
+                        if (v090ClientId && v091ClientId && v091ClientId !== v090ClientId) {
+                            this.options.globalAttributes.migrationId = v091ClientId;
+                        }
+                        if (v090ClientId) {
+                            v091ClientId = v090ClientId;
+                        }
+                    } catch (err) {
+                        this.logger.warn('Had corrupt v0.9.0 Storage');
+                    }
+                }
+            }
+        } catch (err) {
+            this.logger.warn('window is undefined, unable to check for v090 data');
+        }
+
         this.options.clientContext = this.options.clientContext || {
                 'client'  : {
-                    'client_id'       : this.options.clientId || this.storage.get(AMA.StorageKeys.CLIENT_ID) || AMA.Util.GUID(),
+                    'client_id'       : this.options.clientId || v091ClientId || AMA.Util.GUID(),
                     'app_title'       : this.options.appTitle,
                     'app_version_name': this.options.appVersionName,
                     'app_version_code': this.options.appVersionCode,
@@ -196,7 +212,7 @@ AMA.Client = (function () {
                     'mobile_analytics': {
                         'app_id'     : this.options.appId,
                         'sdk_name'   : 'aws-sdk-mobile-analytics-js',
-                        'sdk_version': '0.9.1' + ':' + AWS.VERSION
+                        'sdk_version': '0.9.2' + ':' + AWS.VERSION
                     }
                 },
                 'custom'  : {}
@@ -571,15 +587,6 @@ module.exports = AMA.Client;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./MobileAnalyticsUtilities.js":4,"./StorageClients/LocalStorage.js":5,"./StorageClients/StorageKeys.js":6}],2:[function(require,module,exports){
 (function (global){
-/*
-  Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
-  the License. A copy of the License is located at http://aws.amazon.com/apache2.0/
-  or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
-  and limitations under the License.
-*/
-
 var AMA = global.AMA;
 AMA.Storage = require('./StorageClients/LocalStorage.js');
 AMA.StorageKeys = require('./StorageClients/StorageKeys.js');
@@ -726,15 +733,6 @@ module.exports = AMA.Session;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./MobileAnalyticsUtilities.js":4,"./StorageClients/LocalStorage.js":5,"./StorageClients/StorageKeys.js":6}],3:[function(require,module,exports){
 (function (global){
-/*
-  Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
-  the License. A copy of the License is located at http://aws.amazon.com/apache2.0/
-  or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
-  and limitations under the License.
-*/
-
 var AMA = global.AMA;
 AMA.Storage = require('./StorageClients/LocalStorage.js');
 AMA.StorageKeys = require('./StorageClients/StorageKeys.js');
@@ -917,15 +915,6 @@ module.exports = AMA.Manager;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./MobileAnalyticsClient.js":1,"./MobileAnalyticsSession.js":2,"./StorageClients/LocalStorage.js":5,"./StorageClients/StorageKeys.js":6}],4:[function(require,module,exports){
 (function (global){
-/*
-  Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
-  the License. A copy of the License is located at http://aws.amazon.com/apache2.0/
-  or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
-  and limitations under the License.
-*/
-
 var AMA = global.AMA;
 
 AMA.Util = (function () {
@@ -989,15 +978,6 @@ module.exports = AMA.Util;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],5:[function(require,module,exports){
 (function (global){
-/*
-  Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
-  the License. A copy of the License is located at http://aws.amazon.com/apache2.0/
-  or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
-  and limitations under the License.
-*/
-
 var AMA = global.AMA;
 AMA.Util = require('../MobileAnalyticsUtilities.js');
 
@@ -1088,7 +1068,7 @@ AMA.Storage = (function () {
             this.logger.log('LocalStorage is not available');
         }
     };
-    LocalStorageClient.prototype.setLogger =  function (logFunction) {
+    LocalStorageClient.prototype.setLogger = function (logFunction) {
         this.logger = logFunction;
     };
     LocalStorageClient.prototype.supportsLocalStorage = function supportsLocalStorage() {
@@ -1121,15 +1101,6 @@ module.exports = AMA.Storage;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../MobileAnalyticsUtilities.js":4}],6:[function(require,module,exports){
 (function (global){
-/*
-  Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
-  the License. A copy of the License is located at http://aws.amazon.com/apache2.0/
-  or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
-  and limitations under the License.
-*/
-
 var AMA = global.AMA;
 
 AMA.StorageKeys = {
@@ -1146,15 +1117,6 @@ module.exports = AMA.StorageKeys;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],7:[function(require,module,exports){
 (function (global){
-/*
-  Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
-  the License. A copy of the License is located at http://aws.amazon.com/apache2.0/
-  or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
-  and limitations under the License.
-*/
-
 /**
  * @module AMA
  * @description The global namespace for Amazon Mobile Analytics
